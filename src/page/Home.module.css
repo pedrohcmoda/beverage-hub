@@ -1,0 +1,47 @@
+* {
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: #0F161E;
+  width: 100vw;
+  
+}
+
+.homeContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title {
+  font-family: "Alex Brush", cursive;
+  font-size: clamp(2rem, 3vw, 3rem);
+  font-weight: 100;
+  line-height: 1.1;
+  text-align: center;
+  color: #ffffff
+}
+
+.carousel {
+  height: clamp(10vh, 10rem);
+  width: 90%;
+}
+
+.drinkContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.title2 {
+  font-family: "Alex Brush", cursive;
+  font-size: clamp(2.5rem, 3vw, 4rem);
+  font-weight: 100;
+  line-height: 1.1;
+  text-align: center;
+  color: #ffffff;
+  margin: clamp(2rem, 4vw, 5rem);
+}
