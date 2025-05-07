@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Banner from '../components/Banner/Banner';
 import CardCategory from '../components/CardCategory/CardCategory';
-
+import Drink from '../components/Drink/Drink';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
@@ -70,6 +70,7 @@ function Home() {
       </div>
       <h2 className={styles.title2}>Try this Drink!</h2>
       <div className={styles.drinkContainer}>
+        <Drink />
       </div>
     </div>
   );
