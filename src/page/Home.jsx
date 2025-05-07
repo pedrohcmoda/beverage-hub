@@ -7,9 +7,13 @@ import { Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 import styles from './Home.module.css';
 import categoryIcons from '../utils/categoryIcons';
+import SearchBar from '../components/SearchBar/SearchBar';
+import Footer from '../components/Footer/Footer';
 
 function Home() {
   const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("cocktail");
 
   useEffect(() => {
     async function fetchCategories() {
@@ -27,9 +31,28 @@ function Home() {
     fetchCategories();
   }, []);
 
+  const handleSearchChange = (value) => {
+    setSearch(value);
+  };
+
+  const handleSearch = (searchValue, category) => {
+    console.log("buscando por:", searchValue, "em:", category);
+  };
+
   return (
     <div className={styles.homeContainer}>
-      <h1 className={styles.title}>BeverageHub</h1>
+      <div className={styles.header}>
+        <h1 className={styles.headerTitle}>BeverageHub</h1>
+        <div className={styles.headerSearch}>
+          <SearchBar
+            value={search}
+            onChange={handleSearchChange}
+            selectedCategory={selectedCategory}
+            onCategoryChange={setSelectedCategory}
+            onSearch={handleSearch}
+          />
+        </div>
+      </div>
       <Banner />
       <h2 className={styles.title2}>Drinks by Category</h2>
       <div className={styles.carousel}>
@@ -53,7 +76,7 @@ function Home() {
               slidesPerView: 4.5,
             },
             1920: {
-              slidesPerView: 6, 
+              slidesPerView: 6,
             },
           }}
         >
@@ -72,6 +95,7 @@ function Home() {
       <div className={styles.drinkContainer}>
         <Drink />
       </div>
+      <Footer />
     </div>
   );
 }

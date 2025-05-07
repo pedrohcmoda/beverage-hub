@@ -17,13 +17,67 @@ body{
   align-items: center;
 }
 
-.title {
+.header {
+  position: relative;
+  width: 100%;
+  background: #181e25;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 2vw;
+  height: 70px;
+  z-index: 10;
+  top: 0;
+  left: 0;
+}
+
+.headerTitle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   font-family: "Alex Brush", cursive;
-  font-size: clamp(2rem, 3vw, 3rem);
-  font-weight: 100;
-  line-height: 1.1;
-  text-align: center;
-  color: #ffffff
+  font-size: 2.5rem;
+  color: #fff;
+  font-weight: 400;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.headerSearch {
+  min-width: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 20;
+}
+
+@media (max-width: 768px) {
+  .header {
+    position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 1rem 2vw;
+    gap: 0.5rem;
+  }
+  .headerTitle {
+    position: static;
+    transform: none;
+    white-space: normal;
+    text-align: center;
+    font-size: 2rem;
+  }
+  .headerSearch {
+    justify-content: center;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+.spacer {
+  height: 70px;
+  width: 100%;
 }
 
 .carousel {
@@ -34,6 +88,13 @@ body{
 .drinkContainer {
   display: flex;
   justify-content: center;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .title2 {
