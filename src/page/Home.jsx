@@ -56,7 +56,7 @@ function Home() {
       const data = await response.json();
       setSearchResults(data.drinks || []);
     } catch (error) {
-      console.error('Error');
+        console.error('Error:', error);
     }
   };
 
