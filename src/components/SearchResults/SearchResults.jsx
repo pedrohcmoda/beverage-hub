@@ -31,7 +31,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 24;
+  const itemsPerPage = 20;
 
   const pageCount = Math.ceil(filteredDrinks.length / itemsPerPage);
   const offset = currentPage * itemsPerPage;
