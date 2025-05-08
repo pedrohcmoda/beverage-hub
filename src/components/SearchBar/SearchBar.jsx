@@ -18,16 +18,6 @@ function SearchBar({
     setInputValue(value || "");
   }, [value]);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      if (inputValue !== "" && onSearch) {
-        onSearch(inputValue, selectedCategory);
-      }
-    }, 500);
-
-    return () => clearTimeout(handler);
-  }, [inputValue, selectedCategory, onSearch]);
-
   const handleInputChange = (e) => {
     const whatUserTyped = e.target.value;
     setInputValue(whatUserTyped);
