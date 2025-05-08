@@ -18,17 +18,17 @@ function Home() {
   const [searchResults, setSearchResults] = useState([]);
 
   const categoryIcons = {
-    Cocktail: '/public/Cocktail.png',
-    Shake: '/public/Shake.png',
-    Soft_Drink: '/public/Soft_Drink.png',
-    Ordinary_Drink: '/public/Ordinary_Drink.png',
-    Beer: '/public/Beer.png',
-    Coffee_Tea: '/public/Coffee_Tea.png',
-    Punch_Party_Drink: '/public/Punch_Party_Drink.png',
-    Shot: '/public/Shot.png',
-    Cocoa: '/public/Cocoa.png',
-    Other_Unknown: '/public/Other_Unknown.png',
-    Homemade_Liqueur: '/public/Homemade_Liqueur.png',
+    Cocktail: 'public/Cocktail.png',
+    Shake: './public/Shake.png',
+    Soft_Drink: './public/Soft_Drink.png',
+    Ordinary_Drink: './public/Ordinary_Drink.png',
+    Beer: './public/Beer.png',
+    Coffee_Tea: './public/Coffee_Tea.png',
+    Punch_Party_Drink: './public/Punch_Party_Drink.png',
+    Shot: './public/Shot.png',
+    Cocoa: './public/Cocoa.png',
+    Other_Unknown: './public/Other_Unknown.png',
+    Homemade_Liqueur: './public/Homemade_Liqueur.png',
   }
 
   useEffect(() => {
