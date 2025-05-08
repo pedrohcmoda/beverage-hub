@@ -3,10 +3,12 @@ import CardResult from "../CardResult/CardResult";
 import Filter from "../Filter/Filter";
 import { useState, useEffect } from "react";
 import styles from "./SearchResults.module.css";
+import DrinkModal from "../DrinkModal/DrinkModal";
 import ReactPaginate from "react-paginate";
 
 const SearchResults = ({ drinks, initialFilters = {} }) => {
   const [filteredDrinks, setFilteredDrinks] = useState([]);
+  const [selectedDrink, setSelectedDrink] = useState(null);
   const [filters, setFilters] = useState({
     categories: {
       cocktail: false,
@@ -111,6 +113,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
             <CardResult
               key={drink.idDrink}
               drink={drink}
+              onClick={() => setSelectedDrink(drink)}
             />
           ))}
         </div>
@@ -139,6 +142,12 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
           </div>
         )}
       </main>
+      {selectedDrink && (
+        <DrinkModal
+          drink={selectedDrink}
+          onClose={() => setSelectedDrink(null)}
+        />
+      )}
     </div>
   );
 };
