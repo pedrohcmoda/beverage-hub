@@ -87,7 +87,7 @@ Special thank you for all people that contributed for this project.
 
 <h2 id="contribute">📫 Contribute</h2>
 
-1. `git clone https://github.com/Kio-Suzuki/Satisfying.You`
+1. `git clone https://github.com/pedrohcmoda/beverage-hub.git`
 2. `git checkout -b feature/NAME`
 3. Follow commit patterns
 4. Open a Pull Request explaining the problem solved or feature made, if exists, append screenshot of visual modifications and wait for the review!
