@@ -3,12 +3,12 @@ import styles from './CardCategory.module.css'
 
 function CardCategory(props) {
   
-  const { category, icon } = props
+  const { category, icon, onClick } = props
 
   return (
-    <div className={styles.cardContainer}>
+    <div className={styles.cardContainer} onClick={onClick}>
       <div className={styles.card}>
-        <img className={styles.cardImage} src={icon} alt="" />
+        <img className={styles.cardImage} src={icon} alt={category} />
         <h2 className={styles.cardTitle}>{category}</h2>
       </div>
     </div>

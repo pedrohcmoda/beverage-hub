@@ -13,7 +13,7 @@ import Footer from '../components/Footer/Footer';
 function Home() {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("cocktail");
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -37,6 +37,18 @@ function Home() {
 
   const handleSearch = (searchValue, category) => {
     console.log("buscando por:", searchValue, "em:", category);
+  };
+
+  const handleCategoryClick = (categoryName) => {
+    fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(categoryName)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(`${categoryName}`, data);
+        setSelectedCategory(data.drinks || []);
+      })
+      .catch((error) => {
+        console.error('Erro ao buscar drinks da categoria:', error);
+      });
   };
 
   return (
@@ -85,7 +97,7 @@ function Home() {
             const icon = categoryIcons[normalizedName] || categoryIcons['default'];
             return (
               <SwiperSlide key={normalizedName}>
-                <CardCategory category={category.strCategory} icon={icon} />
+                <CardCategory category={category.strCategory} icon={icon} onClick={() => {setSelectedCategory(category.strCategory); handleCategoryClick(category.strCategory)}}/>
               </SwiperSlide>
             );
           })}

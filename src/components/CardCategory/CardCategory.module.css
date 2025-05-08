@@ -3,6 +3,7 @@
   background: linear-gradient(0deg, #cc57c7, #efcb58);
   padding: 2px;
   display: inline-block;
+  cursor: pointer;
 }
 
 .card {
