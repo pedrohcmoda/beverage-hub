@@ -123,13 +123,12 @@ body{
 }
 
 .carousel :global(.swiper) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
   bottom: 0px !important; 
   z-index: 9 !important;
-  height: 35vh !important;
+  height: 37vh !important;
 }
 
-@media (max-width: 768px) {
-  .carousel :global(.swiper) {
-    height: 25vh !important;
-  }
-}

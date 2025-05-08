@@ -9,11 +9,13 @@ import styles from './Home.module.css';
 import categoryIcons from '../utils/categoryIcons';
 import SearchBar from '../components/SearchBar/SearchBar';
 import Footer from '../components/Footer/Footer';
+import SearchResults from '../components/SearchResults/SearchResults';
 
 function Home() {
   const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("cocktail");
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('cocktail');
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     async function fetchCategories() {
@@ -35,8 +37,27 @@ function Home() {
     setSearch(value);
   };
 
-  const handleSearch = (searchValue, category) => {
-    console.log("buscando por:", searchValue, "em:", category);
+  const handleSearch = async (searchValue, category) => {
+    if (!searchValue) {
+      setSearchResults([]);
+      return;
+    }
+
+    try {
+      let url = '';
+
+      if (category === 'cocktail') {
+        url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchValue}`;
+      } else if (category === 'ingredient') {
+        url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchValue}`;
+      }
+
+      const response = await fetch(url);
+      const data = await response.json();
+      setSearchResults(data.drinks || []);
+    } catch (error) {
+      console.error('Error');
+    }
   };
 
   return (
@@ -95,6 +116,7 @@ function Home() {
       <div className={styles.drinkContainer}>
         <Drink />
       </div>
+      <SearchResults drinks={searchResults} />
       <Footer />
     </div>
   );
