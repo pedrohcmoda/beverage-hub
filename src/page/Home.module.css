@@ -52,9 +52,10 @@ body{
   z-index: 20;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 912px) {
   .header {
     position: relative;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -62,9 +63,10 @@ body{
     padding: 1rem 2vw;
     gap: 0.5rem;
   }
-  .headerTitle {
-    position: static;
+  .logo {
+    position: relative;
     transform: none;
+    left: 0;
     white-space: normal;
     text-align: center;
     font-size: 2rem;
