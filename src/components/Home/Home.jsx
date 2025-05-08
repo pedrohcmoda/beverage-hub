@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Banner from '../components/Banner/Banner';
-import CardCategory from '../components/CardCategory/CardCategory';
-import Drink from '../components/Drink/Drink';
+import Banner from '../Banner/Banner';
+import CardCategory from '../CardCategory/CardCategory';
+import Drink from '../Drink/Drink';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 import styles from './Home.module.css';
-import categoryIcons from '../utils/categoryIcons';
-import SearchBar from '../components/SearchBar/SearchBar';
-import Footer from '../components/Footer/Footer';
-import SearchResults from '../components/SearchResults/SearchResults';
+import SearchBar from '../SearchBar/SearchBar';
+import Footer from '../Footer/Footer';
+import SearchResults from '../SearchResults/SearchResults';
 import { Link } from 'react-router-dom';
 
 function Home() {
@@ -18,6 +17,22 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState('cocktail');
   const [searchResults, setSearchResults] = useState([]);
 
+
+  const categoryIcons = {
+    Cocktail: '/Cocktail.png',
+    Shake: '/Shake.png',
+    Soft_Drink: '/Soft_Drink.png',
+    Ordinary_Drink: '/Ordinary_Drink.png',
+    Beer: '/Beer.png',
+    Coffee_Tea: '/Coffee_Tea.png',
+    Punch_Party_Drink: '/Punch_Party_Drink.png',
+    Shot: '/Shot.png',
+    Cocoa: '/Cocoa.png',
+    Other_Unknown: '/Other_Unknown.png',
+    Homemade_Liqueur: '/Homemade_Liqueur.png',
+  }
+
+  
   useEffect(() => {
     async function fetchCategories() {
       try {
