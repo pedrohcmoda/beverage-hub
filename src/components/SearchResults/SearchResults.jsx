@@ -1,9 +1,9 @@
 import React from "react";
 import CardResult from "../CardResult/CardResult";
-import Filter from "../Filter/Filter";
+import Filter from "../Filter/Filter.jsx";
 import { useState, useEffect } from "react";
 import styles from "./SearchResults.module.css";
-import DrinkModal from "../DrinkModal/DrinkModal";
+import DrinkModal from "../DrinkModal/DrinkModal.jsx";
 import ReactPaginate from "react-paginate";
 
 const SearchResults = ({ drinks, initialFilters = {} }) => {
