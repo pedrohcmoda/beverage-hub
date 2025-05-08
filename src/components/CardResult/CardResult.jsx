@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./CardResult.module.css";
 
-function CardResult({ drink }) {
+function CardResult({ drink, onClick }) {
   return (
-    <div className={styles.cardContainer}>
+    <div className={styles.cardContainer} onClick={onClick} tabIndex={0} style={{cursor: "pointer"}}>
       <div className={styles.imageContainer}>
         <img 
           src={drink.strDrinkThumb} 
