@@ -1,0 +1,92 @@
+.container {
+  width: 90vw;
+  display: flex;
+  min-height: 100vh;
+  background: #181d23;
+  color: #fff;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.filterSidebar {
+  width: 270px;
+  background: #181d23;
+  padding: 32px 20px 0 40px;
+  border-right: 1px solid #23272f;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.resultsContainer {
+  flex: 1;
+  padding: 32px 40px 0 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsHeader {
+  margin-bottom: 28px;
+  text-align: left;
+}
+
+.drinkCount {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+
+.resultsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 32px 24px;
+}
+
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 24px 0;
+}
+
+.pagination {
+  display: flex;
+  gap: 6px;
+  list-style: none;
+  padding: 0;
+}
+
+.pageLink {
+  color: #fff;
+  background: #23272f;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  border: none;
+  font-size: 1rem;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.pageLink:hover {
+  background: #e7b859;
+  color: #181d23;
+}
+
+.active .pageLink {
+  background: #e7b859;
+  color: #181d23;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .filterSidebar {
+    width: 100%;
+  }
+
+  .resultsGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}
