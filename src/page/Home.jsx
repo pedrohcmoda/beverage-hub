@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import Banner from '../components/Banner/Banner.jsx';
-import CardCategory from '../components/CardCategory/CardCategory.jsx';
-import Drink from '../components/Drink/Drink.jsx';
+import Banner from '../components/Banner/Banner';
+import CardCategory from '../components/CardCategory/CardCategory';
+import Drink from '../components/Drink/Drink';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper/modules';
 import 'swiper/css/bundle';
 import styles from './Home.module.css';
 import categoryIcons from '../utils/categoryIcons';
-import SearchBar from '../components/SearchBar/SearchBar.jsx';
-import Footer from '../components/Footer/Footer.jsx';
-import SearchResults from '../components/SearchResults/SearchResults.jsx';
+import SearchBar from '../components/SearchBar/SearchBar';
+import Footer from '../components/Footer/Footer';
+import SearchResults from '../components/SearchResults/SearchResults';
 import { Link } from 'react-router-dom';
 
 function Home() {
