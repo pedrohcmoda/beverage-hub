@@ -18,7 +18,7 @@ function Home() {
   const [searchResults, setSearchResults] = useState([]);
 
   const categoryIcons = {
-    Cocktail: 'public/Cocktail.png',
+    Cocktail: '/Cocktail.png',
     Shake: '/Shake.png',
     Soft_Drink: '/Soft_Drink.png',
     Ordinary_Drink: '/Ordinary_Drink.png',
