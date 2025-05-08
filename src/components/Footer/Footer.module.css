@@ -1,0 +1,22 @@
+.footer {
+    background-color: #181e25;
+    color: #fff;
+    width: 100%;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .footerContent {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .footerTitle {
+    font-family: "Alex Brush", cursive;
+    font-weight: 400;
+    margin: 0;
+  }

@@ -1,0 +1,43 @@
+.cardContainer {
+    width: 100%;
+    max-width: 250px;
+    margin: 0.5rem;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  
+  .imageContainer {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+  .drinkImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .drinkName {
+    padding: 0.8rem;
+    text-align: center;
+    font-weight: 500;
+    color: #333;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  @media (max-width: 768px) {
+    .cardContainer {
+      max-width: 160px;
+    }
+    
+    .imageContainer {
+      height: 160px;
+    }
+  }

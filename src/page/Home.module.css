@@ -1,0 +1,137 @@
+* {
+  box-sizing: border-box;
+}
+
+body{
+  margin: 0;
+  padding: 0;
+  background-color: #0F161E;
+  width: 100vw;
+}
+
+.homeContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  position: relative;
+  width: 100%;
+  background: #181e25;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 2vw;
+  height: 70px;
+  z-index: 10;
+  top: 0;
+  left: 0;
+}
+
+.logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Alex Brush", cursive;
+  font-size: 2.5rem;
+  color: #fff;
+  font-weight: 400;
+  margin: 0;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.headerSearch {
+  min-width: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 20;
+}
+
+@media (max-width: 912px) {
+  .header {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    padding: 1rem 2vw;
+    gap: 0.5rem;
+  }
+  .logo {
+    position: relative;
+    transform: none;
+    left: 0;
+    white-space: normal;
+    text-align: center;
+    font-size: 2rem;
+  }
+  .headerSearch {
+    justify-content: center;
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+.spacer {
+  height: 70px;
+  width: 100%;
+}
+
+.carousel {
+  width: 90%;
+}
+
+.drinkContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.topContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title2 {
+  font-family: "Alex Brush", cursive;
+  font-size: clamp(2.5rem, 3vw, 4rem);
+  font-weight: 100;
+  line-height: 1.1;
+  text-align: center;
+  color: #ffffff;
+  margin: clamp(2rem, 4vw, 5rem);
+}
+
+.carousel :global(.swiper-pagination) {
+  bottom: -17vh !important; 
+  z-index: 9 !important;
+  height: 20vh !important;
+}
+
+.carousel :global(.swiper-pagination-bullet) {
+  background-color: #fff !important; 
+  opacity: 0.6 !important;
+}
+
+.carousel :global(.swiper-pagination-bullet-active) {
+  background-color: #cc57c7 !important;
+  opacity: 1 !important;
+}
+
+.carousel :global(.swiper) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  bottom: 0px !important; 
+  z-index: 9 !important;
+  height: 32vh !important;
+}
+
