@@ -39,16 +39,14 @@ function Home() {
     console.log("buscando por:", searchValue, "em:", category);
   };
 
-  const handleCategoryClick = (categoryName) => {
-    fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(categoryName)}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(`${categoryName}`, data);
-        setSelectedCategory(data.drinks || []);
-      })
-      .catch((error) => {
-        console.error('Erro ao buscar drinks da categoria:', error);
-      });
+  const handleCategoryClick = async (categoryName) => {
+    try {
+      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(categoryName)}`);
+      const data = await response.json();
+      setSelectedCategory(data.drinks || []);
+    } catch (error) {
+      console.error('Error fetching drinks by category:', error);
+    }
   };
 
   return (
