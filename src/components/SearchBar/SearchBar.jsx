@@ -34,12 +34,14 @@ function SearchBar({
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && onSearch) {
       onSearch(inputValue, selectedCategory);
+      setInputValue("");
     }
   };
 
   const handleSearch = () => {
     if (onSearch) {
       onSearch(inputValue, selectedCategory);
+      setInputValue("");
     }
   };
 

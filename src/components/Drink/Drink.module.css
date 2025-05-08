@@ -25,7 +25,7 @@ body {
 .image {
   border-radius: 5%;
   background: linear-gradient(0deg, #cc57c7, #efcb58);
-  padding: 4px;
+  padding: 3px;
   display: inline-block;
   width: 100%;
   object-fit: cover;

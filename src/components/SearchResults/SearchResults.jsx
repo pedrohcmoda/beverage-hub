@@ -31,7 +31,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const itemsPerPage = 20;
+  const itemsPerPage = 24;
 
   const pageCount = Math.ceil(filteredDrinks.length / itemsPerPage);
   const offset = currentPage * itemsPerPage;
@@ -98,9 +98,9 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
 
   return (
     <div className={styles.container}>
-      <aside className={styles.filterSidebar}>
+      {/* <aside className={styles.filterSidebar}>
         <Filter onFilterChange={handleFilterChange} />
-      </aside>
+      </aside> */}
 
       <main className={styles.resultsContainer}>
         <div className={styles.resultsHeader}>

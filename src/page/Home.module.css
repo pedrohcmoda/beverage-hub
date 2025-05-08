@@ -7,7 +7,6 @@ body{
   padding: 0;
   background-color: #0F161E;
   width: 100vw;
-  
 }
 
 .homeContainer {
@@ -31,7 +30,7 @@ body{
   left: 0;
 }
 
-.headerTitle {
+.logo {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -42,6 +41,7 @@ body{
   font-weight: 400;
   margin: 0;
   white-space: nowrap;
+  text-decoration: none;
 }
 
 .headerSearch {
@@ -75,6 +75,7 @@ body{
     max-width: 320px;
   }
 }
+
 .spacer {
   height: 70px;
   width: 100%;
@@ -129,6 +130,6 @@ body{
   width: 100%;
   bottom: 0px !important; 
   z-index: 9 !important;
-  height: 37vh !important;
+  height: 32vh !important;
 }
 

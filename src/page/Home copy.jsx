@@ -73,25 +73,7 @@ function Home() {
     }
   };
 
-  return searchResults.length > 0 ? (
-    <div className={styles.homeContainer}>
-      <div className={styles.header}>
-        <Link to="/" onClick={() => {setSearchResults([])}} className={styles.logo}>BeverageHub</Link>
-        <div className={styles.headerSearch}>
-          <SearchBar
-            value={search}
-            onChange={handleSearchChange}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onSearch={handleSearch}
-          />
-        </div>
-      </div>
-      <Banner />
-      <SearchResults drinks={searchResults} />
-      <Footer />
-    </div>
-  ) : (
+  return (
     <div className={styles.homeContainer}>
       <div className={styles.header}>
         <Link to="/" className={styles.logo}>BeverageHub</Link>
@@ -115,11 +97,21 @@ function Home() {
           grabCursor={true}
           pagination={{ clickable: true }}
           breakpoints={{
-            0: { slidesPerView: 2.5 },
-            480: { slidesPerView: 3 },
-            768: { slidesPerView: 4 },
-            1024: { slidesPerView: 4.5 },
-            1920: { slidesPerView: 6 },
+            0: {
+              slidesPerView: 2.5,
+            },
+            480: {
+              slidesPerView: 3,
+            },
+            768: {
+              slidesPerView: 4,
+            },
+            1024: {
+              slidesPerView: 4.5,
+            },
+            1920: {
+              slidesPerView: 6,
+            },
           }}
         >
           {categories.map((category) => {
@@ -127,11 +119,7 @@ function Home() {
             const icon = categoryIcons[normalizedName] || categoryIcons['default'];
             return (
               <SwiperSlide key={normalizedName}>
-                <CardCategory
-                  category={category.strCategory}
-                  icon={icon}
-                  onClick={() => { handleCategoryClick(category.strCategory); }}
-                />
+                <CardCategory category={category.strCategory} icon={icon} onClick={() => {handleCategoryClick(category.strCategory)}}/>
               </SwiperSlide>
             );
           })}
@@ -141,6 +129,7 @@ function Home() {
       <div className={styles.drinkContainer}>
         <Drink />
       </div>
+      <SearchResults drinks={searchResults} />
       <Footer />
     </div>
   );
