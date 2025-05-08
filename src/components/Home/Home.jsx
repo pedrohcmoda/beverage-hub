@@ -16,6 +16,7 @@ function Home() {
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('cocktail');
   const [searchResults, setSearchResults] = useState([]);
+  const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
 
 
   const categoryIcons = {
@@ -71,6 +72,7 @@ function Home() {
       const response = await fetch(url);
       const data = await response.json();
       setSearchResults(data.drinks || []);
+      setMostraResultadoBusca(true);
     } catch (error) {
         console.error('Error:', error);
     }
@@ -88,28 +90,10 @@ function Home() {
     }
   };
 
-  return searchResults.length > 0 ? (
+  return (
     <div className={styles.homeContainer}>
       <div className={styles.header}>
-        <Link to="/" onClick={() => {setSearchResults([])}} className={styles.logo}>BeverageHub</Link>
-        <div className={styles.headerSearch}>
-          <SearchBar
-            value={search}
-            onChange={handleSearchChange}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onSearch={handleSearch}
-          />
-        </div>
-      </div>
-      <Banner />
-      <SearchResults drinks={searchResults} />
-      <Footer />
-    </div>
-  ) : (
-    <div className={styles.homeContainer}>
-      <div className={styles.header}>
-        <Link to="/" className={styles.logo}>BeverageHub</Link>
+        <Link to="/" onClick={() => {setSearchResults([]); setMostraResultadoBusca(false);}} className={styles.logo}>BeverageHub</Link>
         <div className={styles.headerSearch}>
           <SearchBar
             value={search}
@@ -153,9 +137,13 @@ function Home() {
         </Swiper>
       </div>
       <h2 className={styles.title2}>Try this Drink!</h2>
-      <div className={styles.drinkContainer}>
-        <Drink />
-      </div>
+      {mostraResultadoBusca ? (
+        <SearchResults drinks={searchResults} />
+      ) : (
+        <div className={styles.drinkContainer}>
+          <Drink />
+        </div>
+      )}
       <Footer />
     </div>
   );
