@@ -4,7 +4,7 @@
 [JAVASCRIPT__BADGE]: https://img.shields.io/badge/Javascript-000?style=for-the-badge&logo=javascript
 
 [PROJECT__BADGE]: https://img.shields.io/badge/📱Visit_this_project-000?style=for-the-badge&logo=project
-[PROJECT__URL]: https://github.com/Kio-Suzuki/Satisfying.You
+[PROJECT__URL]: beverage-hub.vercel.app
 
 <h1 align="center" style="font-weight: bold;">🍹 Beverage Hub</h1>
 
