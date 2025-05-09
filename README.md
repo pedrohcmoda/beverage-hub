@@ -20,7 +20,8 @@
 </p>
 
 <p align="center">
-    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/Macbook-home1.png?raw=true" width="450px"><br><br>
+    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/Macbook-home1.png?raw=true" width="450px">
+    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/Macbook-drinks.png?raw=true" width="450px"><br><br>
     <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/home-mobile.png?raw=true" width="200px">
 </p>
 
