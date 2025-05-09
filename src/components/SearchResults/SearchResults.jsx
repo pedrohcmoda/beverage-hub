@@ -5,10 +5,12 @@ import { useState, useEffect } from "react";
 import styles from "./SearchResults.module.css";
 import DrinkModal from "../DrinkModal/DrinkModal.jsx";
 import ReactPaginate from "react-paginate";
+import { useContext } from "react";
+import { DrinkContext } from "../../context/DrinkProvider";
 
 const SearchResults = ({ drinks, initialFilters = {} }) => {
+  const { selectedDrink, setSelectedDrink } = useContext(DrinkContext);
   const [filteredDrinks, setFilteredDrinks] = useState([]);
-  const [selectedDrink, setSelectedDrink] = useState(null);
   const [filters, setFilters] = useState({
     categories: {
       cocktail: false,
@@ -144,7 +146,6 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
       </main>
       {selectedDrink && (
         <DrinkModal
-          drink={selectedDrink}
           onClose={() => setSelectedDrink(null)}
         />
       )}
