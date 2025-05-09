@@ -9,10 +9,9 @@ function Drink() {
       try {
         const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/random.php'); 
         const data = await response.json();
-        setDrink(data.drinks[0]); 
-        console.log(data.drinks[0]);
+        setDrink(data.drinks[0]);
       } catch (error) {
-        console.error('Error fetching drink:', error);
+        console.error('Error: ', error);
       }
     }
     fetchDrink();

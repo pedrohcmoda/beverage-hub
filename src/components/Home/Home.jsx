@@ -1,50 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import Banner from '../Banner/Banner';
-import CardCategory from '../CardCategory/CardCategory';
-import Drink from '../Drink/Drink';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Pagination } from 'swiper/modules';
-import 'swiper/css/bundle';
-import styles from './Home.module.css';
-import SearchBar from '../SearchBar/SearchBar';
-import Footer from '../Footer/Footer';
-import SearchResults from '../SearchResults/SearchResults';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import Banner from "../Banner/Banner";
+import CardCategory from "../CardCategory/CardCategory";
+import Drink from "../Drink/Drink";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+import "swiper/css/bundle";
+import styles from "./Home.module.css";
+import SearchBar from "../SearchBar/SearchBar";
+import Footer from "../Footer/Footer";
+import SearchResults from "../SearchResults/SearchResults";
+import { Link } from "react-router-dom";
 
 function Home() {
   const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('cocktail');
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("cocktail");
   const [searchResults, setSearchResults] = useState([]);
   const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
 
-
   const categoryIcons = {
-    Cocktail: '/Cocktail.png',
-    Shake: '/Shake.png',
-    Soft_Drink: '/Soft_Drink.png',
-    Ordinary_Drink: '/Ordinary_Drink.png',
-    Beer: '/Beer.png',
-    Coffee_Tea: '/Coffee_Tea.png',
-    Punch_Party_Drink: '/Punch_Party_Drink.png',
-    Shot: '/Shot.png',
-    Cocoa: '/Cocoa.png',
-    Other_Unknown: '/Other_Unknown.png',
-    Homemade_Liqueur: '/Homemade_Liqueur.png',
-  }
+    Cocktail: "/Cocktail.png",
+    Shake: "/Shake.png",
+    Soft_Drink: "/Soft_Drink.png",
+    Ordinary_Drink: "/Ordinary_Drink.png",
+    Beer: "/Beer.png",
+    Coffee_Tea: "/Coffee_Tea.png",
+    Punch_Party_Drink: "/Punch_Party_Drink.png",
+    Shot: "/Shot.png",
+    Cocoa: "/Cocoa.png",
+    Other_Unknown: "/Other_Unknown.png",
+    Homemade_Liqueur: "/Homemade_Liqueur.png",
+  };
 
-  
   useEffect(() => {
     async function fetchCategories() {
       try {
         const response = await fetch(
-          'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list'
+          "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list"
         );
         const data = await response.json();
         setCategories(data.drinks);
-        console.log(data.drinks);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error: ", error);
       }
     }
     fetchCategories();
@@ -61,11 +58,11 @@ function Home() {
     }
 
     try {
-      let url = '';
+      let url = "";
 
-      if (category === 'cocktail') {
+      if (category === "cocktail") {
         url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchValue}`;
-      } else if (category === 'ingredient') {
+      } else if (category === "ingredient") {
         url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchValue}`;
       }
 
@@ -74,26 +71,38 @@ function Home() {
       setSearchResults(data.drinks || []);
       setMostraResultadoBusca(true);
     } catch (error) {
-        console.error('Error:', error);
+      console.error("Error: ", error);
     }
   };
 
   const handleCategoryClick = async (category) => {
-    console.log('Category clicked:', category);
     try {
-      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(category)}`);
+      const response = await fetch(
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
+          category
+        )}`
+      );
       const data = await response.json();
       setSearchResults(data.drinks || []);
-      console.log('Drinks in category:', data.drinks);
+      setMostraResultadoBusca(true);
     } catch (error) {
-      console.error('Error fetching drinks by category:', error);
+      console.error("Error: ", error);
     }
   };
 
   return (
     <div className={styles.homeContainer}>
       <div className={styles.header}>
-        <Link to="/" onClick={() => {setSearchResults([]); setMostraResultadoBusca(false);}} className={styles.logo}>BeverageHub</Link>
+        <Link
+          to="/"
+          onClick={() => {
+            setSearchResults([]);
+            setMostraResultadoBusca(false);
+          }}
+          className={styles.logo}
+        >
+          BeverageHub
+        </Link>
         <div className={styles.headerSearch}>
           <SearchBar
             value={search}
@@ -122,27 +131,32 @@ function Home() {
           }}
         >
           {categories.map((category) => {
-            const normalizedName = category.strCategory.replace(/[\s/]+/g, '_');
-            const icon = categoryIcons[normalizedName] || categoryIcons['default'];
+            const normalizedName = category.strCategory.replace(/[\s/]+/g, "_");
+            const icon =
+              categoryIcons[normalizedName] || categoryIcons["default"];
             return (
               <SwiperSlide key={normalizedName}>
                 <CardCategory
                   category={category.strCategory}
                   icon={icon}
-                  onClick={() => { handleCategoryClick(category.strCategory); }}
+                  onClick={() => {
+                    handleCategoryClick(category.strCategory);
+                  }}
                 />
               </SwiperSlide>
             );
           })}
         </Swiper>
       </div>
-      <h2 className={styles.title2}>Try this Drink!</h2>
       {mostraResultadoBusca ? (
         <SearchResults drinks={searchResults} />
       ) : (
-        <div className={styles.drinkContainer}>
-          <Drink />
-        </div>
+        <>
+          <h2 className={styles.title2}>Try this Drink!</h2>
+          <div className={styles.drinkContainer}>
+            <Drink />
+          </div>
+        </>
       )}
       <Footer />
     </div>
