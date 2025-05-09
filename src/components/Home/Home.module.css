@@ -110,9 +110,8 @@ body{
 }
 
 .carousel :global(.swiper-pagination) {
-  bottom: -17vh !important; 
-  z-index: 9 !important;
-  height: 20vh !important;
+  position: relative !important;
+    margin-top: 10px !important;
 }
 
 .carousel :global(.swiper-pagination-bullet) {
@@ -127,11 +126,11 @@ body{
 
 .carousel :global(.swiper) {
   display: flex;
+  flex-direction: column !important;
   justify-content: center;
   align-items: center;
   width: 100%;
   bottom: 0px !important; 
   z-index: 9 !important;
-  height: 32vh !important;
 }
 

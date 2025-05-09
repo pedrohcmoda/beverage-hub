@@ -10,6 +10,7 @@ import SearchBar from "../SearchBar/SearchBar";
 import Footer from "../Footer/Footer";
 import SearchResults from "../SearchResults/SearchResults";
 import { Link } from "react-router-dom";
+import Popup from "../Popup/Popup";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -17,7 +18,9 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState("cocktail");
   const [searchResults, setSearchResults] = useState([]);
   const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
-
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+  
   const categoryIcons = {
     Cocktail: "/Cocktail.png",
     Shake: "/Shake.png",
@@ -53,7 +56,10 @@ function Home() {
 
   const handleSearch = async (searchValue, category) => {
     if (!searchValue) {
+      setPopupMessage("Digite algo para buscar!");
+      setShowPopup(true);
       setSearchResults([]);
+      setMostraResultadoBusca(false);
       return;
     }
 
@@ -68,10 +74,20 @@ function Home() {
 
       const response = await fetch(url);
       const data = await response.json();
-      setSearchResults(data.drinks || []);
-      setMostraResultadoBusca(true);
+      if (!data.drinks && data.drinks != "no data found") {
+        setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
+        setShowPopup(true);
+        setSearchResults([]);
+        setMostraResultadoBusca(false);
+      } else {
+        setSearchResults(data.drinks);
+        setMostraResultadoBusca(true);
+      }
     } catch (error) {
-      console.error("Error: ", error);
+      setPopupMessage("Erro ao buscar. Tente novamente!");
+      setShowPopup(true);
+      setSearchResults([]);
+      setMostraResultadoBusca(false);
     }
   };
 
@@ -159,6 +175,11 @@ function Home() {
         </>
       )}
       <Footer />
+      <Popup
+        message={popupMessage}
+        show={showPopup}
+        onClose={() => setShowPopup(false)}
+      />
     </div>
   );
 }
