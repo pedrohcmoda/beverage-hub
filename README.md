@@ -20,28 +20,22 @@
 </p>
 
 <p align="center">
-    <img src="" width="450px">
+    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/Macbook-home1.png?raw=true" width="450px">
+    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/Macbook-drinks.png?raw=true" width="450px"><br><br>
+    <img src="https://github.com/pedrohcmoda/beverage-hub/blob/main/public/home-mobile.png?raw=true" width="200px">
 </p>
 
 <h2 id="about">📌 About</h2>
 
-No BeverageHub é possível encontrar os mais conhecidos drinks, pesquisa pelo nome ou pelo ingrediente. 
+Beverage Hub é a plataforma ideal para os amantes de drinks! Aqui, você pode encontrar a bebida perfeita para qualquer ocasião — basta pesquisar pelo nome do drink, por um dos ingredientes ou navegar pelas categorias disponíveis.
+
+Descubra novas receitas, explore diferentes estilos de drinks e encontre seu favorito com facilidade.
 
 <h3>Funcionalidades principais:</h3>
-
-- Busca pelo nome ou pelo ingrediente do drink
-
-[![project][PROJECT__BADGE]][PROJECT__URL]
+🔍 Encontre drinks pelo nome ou pelo ingrediente.<br>
+🍹 Listar drinks por categoria
 
 <h2 id="started">🚀 Getting started</h2>
-
-Here you describe how to run your project locally
-
-<h3>Prerequisites</h3>
-
-Here you list all prerequisites necessary for running your project. For example:
-
-
 
 <h3>Cloning</h3>
 

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styles from "./DrinkModal.module.css";
+import { useContext } from "react";
+import { DrinkContext } from "../../context/DrinkProvider";
 
-const DrinkModal = ({ drink, onClose }) => {
+const DrinkModal = ({ onClose }) => {
+  const { selectedDrink } = useContext(DrinkContext);
   const [drinkDetails, setDrinkDetails] = useState(null);
 
   useEffect(() => {
     const fetchDrinkDetails = async () => {
-      if (drink?.idDrink) {
+      if (selectedDrink?.idDrink) {
         const response = await fetch(
-          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${drink.idDrink}`
+          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${selectedDrink.idDrink}`
         );
         const data = await response.json();
         if (data.drinks) {
@@ -18,7 +21,7 @@ const DrinkModal = ({ drink, onClose }) => {
     };
 
     fetchDrinkDetails();
-  }, [drink]);
+  }, [selectedDrink]);
 
   if (!drinkDetails) return null;
 
