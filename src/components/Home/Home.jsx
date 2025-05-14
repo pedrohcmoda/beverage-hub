@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Banner from "../Banner/Banner";
 import CardCategory from "../CardCategory/CardCategory";
 import Drink from "../Drink/Drink";
@@ -18,6 +18,7 @@ function Home() {
   const [selectedCategory, setSelectedCategory] = useState("cocktail");
   const [searchResults, setSearchResults] = useState([]);
   const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
+  const categoryCache = useRef({});
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
   
@@ -92,6 +93,11 @@ function Home() {
   };
 
   const handleCategoryClick = async (category) => {
+    if (categoryCache.current[category]) {
+      setSearchResults(categoryCache.current[category]);
+      setMostraResultadoBusca(true);
+      return;
+    }
     try {
       const response = await fetch(
         `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
@@ -101,6 +107,7 @@ function Home() {
       const data = await response.json();
       setSearchResults(data.drinks || []);
       setMostraResultadoBusca(true);
+      categoryCache.current[category] = data.drinks || [];
     } catch (error) {
       console.error("Error: ", error);
     }
