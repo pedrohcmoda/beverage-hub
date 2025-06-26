@@ -1,8 +1,12 @@
 import express from "express";
 import { PrismaClient } from "@prisma/client";
 import jwt from "jsonwebtoken";
-import { hashPassword, comparePassword } from "../utils/hash.js";
-import { authenticateJWT } from "../middleware/auth.js";
+import { hashPassword, comparePassword } from "../config/hash.js";
+import { authenticateJWT } from "../config/auth.js";
+import { sanitizeBody } from "../config/sanitizer.js";
+import { loginLimiter } from "../config/rateLimit.js";
+import { logEvent } from "../config/logger.js";
+import { findUserByEmail, createUser, findUserById } from "../models/user.js";
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -17,55 +21,72 @@ function setAuthCookie(res, token) {
   });
 }
 
-router.post("/register", async (req, res) => {
+router.post("/register", sanitizeBody, async (req, res) => {
   const { email, password, name } = req.body;
-  if (!email || !password || !name) return res.status(400).json({ error: "Campos obrigatórios" });
+  if (!email || !password || !name) {
+    logEvent(`Register failed: missing fields for ${email || "unknown"}`);
+    return res.status(400).json({ error: "All fields are required." });
+  }
 
-  const exists = await prisma.user.findUnique({ where: { email } });
-  if (exists) return res.status(409).json({ error: "Email já cadastrado" });
+  const exists = await findUserByEmail(email);
+  if (exists) {
+    logEvent(`Register failed: email exists ${email}`);
+    return res.status(409).json({ error: "Email already exists." });
+  }
 
   const hashed = await hashPassword(password);
-  const user = await prisma.user.create({
-    data: { email, password: hashed, name },
-  });
+  const user = await createUser({ email, password: hashed, name });
 
   const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
   setAuthCookie(res, token);
 
+  logEvent(`User registered: ${email}`);
   res.json({ id: user.id, email: user.email, name: user.name });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginLimiter, sanitizeBody, async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Campos obrigatórios" });
+  if (!email || !password) {
+    logEvent(`Login failed: missing fields for ${email || "unknown"}`);
+    return res.status(400).json({ error: "All fields are required." });
+  }
 
-  const user = await prisma.user.findUnique({ where: { email } }); //email nao encontrado
-  if (!user) return res.status(401).json({ error: "Invalid Credentials" });
+  const user = await findUserByEmail(email);
+  if (!user) {
+    logEvent(`Login failed: user not found ${email}`);
+    return res.status(401).json({ error: "Invalid Credentials" });
+  }
 
-  const valid = await comparePassword(password, user.password); //senha incorreta
-  if (!valid) return res.status(401).json({ error: "Invalid Credentials" });
+  const valid = await comparePassword(password, user.password);
+  if (!valid) {
+    logEvent(`Login failed: invalid password for ${email}`);
+    return res.status(401).json({ error: "Invalid Credentials" });
+  }
 
-  //criando token e setando cookie
   const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
   setAuthCookie(res, token);
 
+  logEvent(`Login success: ${email}`);
   res.json({ id: user.id, email: user.email, name: user.name });
 });
 
 router.post("/logout", (req, res) => {
   res.clearCookie("token", { domain: process.env.COOKIE_DOMAIN, path: "/" });
+  logEvent(`Logout`);
   res.json({ ok: true });
 });
 
-// rota para saber se o usuario está logado
 router.get("/me", authenticateJWT, async (req, res) => {
-  const user = await prisma.user.findUnique({ where: { id: req.user.id } });
-  if (!user) return res.status(404).json({ error: "User Not Found!" });
-
+  const user = await findUserById(req.user.id);
+  if (!user) {
+    logEvent(`/me failed: user not found id=${req.user.id}`);
+    return res.status(404).json({ error: "User Not Found!" });
+  }
   res.json({ id: user.id, email: user.email, name: user.name });
 });
+
 export default router;
