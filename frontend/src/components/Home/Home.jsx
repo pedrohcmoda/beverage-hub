@@ -9,8 +9,9 @@ import styles from "./Home.module.css";
 import SearchBar from "../SearchBar/SearchBar";
 import Footer from "../Footer/Footer";
 import SearchResults from "../SearchResults/SearchResults";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Popup from "../Popup/Popup";
+import { FaUserCircle } from "react-icons/fa";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -21,7 +22,9 @@ function Home() {
   const categoryCache = useRef({});
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
   const categoryIcons = {
     Cocktail: "/Cocktail.png",
     Shake: "/Shake.png",
@@ -51,13 +54,22 @@ function Home() {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    fetch("http://localhost:3001/api/auth/me", {
+      credentials: "include",
+    })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setUser(data))
+      .catch(() => setUser(null));
+  }, []);
+
   const handleSearchChange = (value) => {
     setSearch(value);
   };
 
   const handleSearch = async (searchValue, category) => {
     if (!searchValue) {
-      setPopupMessage("Digite algo para buscar!");
+      setPopupMessage("Type something to search!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -89,6 +101,7 @@ function Home() {
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
+      console.error("Error: ", error);
     }
   };
 
@@ -113,9 +126,67 @@ function Home() {
     }
   };
 
+  const handleLogout = async () => {
+    await fetch("http://localhost:3001/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    setUser(null);
+    navigate("/login");
+  };
+
   return (
     <div className={styles.homeContainer}>
       <div className={styles.header}>
+        <div
+          style={{
+            position: "absolute",
+            left: 20,
+            top: "50%",
+            transform: "translateY(-50%)",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <FaUserCircle
+            size={32}
+            color="#efcb58"
+            style={{ verticalAlign: "middle" }}
+          />
+          {user ? (
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#fff",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: "1rem",
+                marginLeft: 4,
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              style={{
+                background: "none",
+                border: "none",
+                color: "#fff",
+                fontWeight: 500,
+                cursor: "pointer",
+                fontSize: "1rem",
+                marginLeft: 4,
+                textDecoration: "none",
+              }}
+            >
+              Sign in
+            </Link>
+          )}
+        </div>
         <Link
           to="/"
           onClick={() => {
