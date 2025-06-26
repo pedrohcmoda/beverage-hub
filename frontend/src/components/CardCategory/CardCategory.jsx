@@ -1,9 +1,8 @@
-import React from 'react'
-import styles from './CardCategory.module.css'
+import React from "react";
+import styles from "./CardCategory.module.css";
 
 function CardCategory(props) {
-  
-  const { category, icon, onClick } = props
+  const { category, icon, onClick } = props;
 
   return (
     <div className={styles.cardContainer} onClick={onClick}>
@@ -12,7 +11,7 @@ function CardCategory(props) {
         <h2 className={styles.cardTitle}>{category}</h2>
       </div>
     </div>
-  )
+  );
 }
 
-export default CardCategory
+export default CardCategory;

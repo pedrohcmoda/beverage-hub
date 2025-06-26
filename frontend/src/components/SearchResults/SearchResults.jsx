@@ -71,9 +71,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
 
     let results = [...drinks];
 
-    const categoryFiltersActive = Object.values(filters.categories).some(
-      (value) => value
-    );
+    const categoryFiltersActive = Object.values(filters.categories).some((value) => value);
 
     if (categoryFiltersActive) {
       results = results.filter((drink) => {
@@ -83,9 +81,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
       });
     }
 
-    const typeFiltersActive = Object.values(filters.types).some(
-      (value) => value
-    );
+    const typeFiltersActive = Object.values(filters.types).some((value) => value);
 
     if (typeFiltersActive) {
       results = results.filter((drink) => {
@@ -106,17 +102,11 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
 
       <main className={styles.resultsContainer}>
         <div className={styles.resultsHeader}>
-          <span className={styles.drinkCount}>
-            {filteredDrinks.length} drinks
-          </span>
+          <span className={styles.drinkCount}>{filteredDrinks.length} drinks</span>
         </div>
         <div className={styles.resultsGrid}>
           {currentPageDrinks.map((drink) => (
-            <CardResult
-              key={drink.idDrink}
-              drink={drink}
-              onClick={() => setSelectedDrink(drink)}
-            />
+            <CardResult key={drink.idDrink} drink={drink} onClick={() => setSelectedDrink(drink)} />
           ))}
         </div>
         {pageCount > 1 && (
@@ -144,11 +134,7 @@ const SearchResults = ({ drinks, initialFilters = {} }) => {
           </div>
         )}
       </main>
-      {selectedDrink && (
-        <DrinkModal
-          onClose={() => setSelectedDrink(null)}
-        />
-      )}
+      {selectedDrink && <DrinkModal onClose={() => setSelectedDrink(null)} />}
     </div>
   );
 };

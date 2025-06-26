@@ -40,22 +40,15 @@ export default function Register({ onRegister }) {
         <div className={styles.headerSearch}></div>
       </div>
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <form
-          className={stylesAuth.loginContainer}
-          onSubmit={handleSubmit}
-        >
+        <form className={stylesAuth.loginContainer} onSubmit={handleSubmit}>
           <h2 className={stylesAuth.loginTitle}>Register</h2>
-          {erro && (
-            <div className={stylesAuth.error}>
-              {erro}
-            </div>
-          )}
+          {erro && <div className={stylesAuth.error}>{erro}</div>}
           <input
             className={stylesAuth.input}
             type="text"
             placeholder="Name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)}
             required
           />
           <input
@@ -63,7 +56,7 @@ export default function Register({ onRegister }) {
             type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
@@ -71,13 +64,10 @@ export default function Register({ onRegister }) {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button
-            className={stylesAuth.button}
-            type="submit"
-          >
+          <button className={stylesAuth.button} type="submit">
             Register
           </button>
           <div style={{ marginTop: "1.2rem", textAlign: "center" }}>
@@ -91,7 +81,7 @@ export default function Register({ onRegister }) {
                 textDecoration: "underline",
                 fontSize: "1rem",
                 marginTop: "0.5rem",
-                display: "inline-block"
+                display: "inline-block",
               }}
             >
               Sign in

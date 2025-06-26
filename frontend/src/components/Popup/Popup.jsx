@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import styles from './Popup.module.css';
+import React, { useEffect } from "react";
+import styles from "./Popup.module.css";
 
 const Popup = ({ message, show, onClose }) => {
   useEffect(() => {

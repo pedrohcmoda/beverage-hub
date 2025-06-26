@@ -12,19 +12,19 @@ function Filter({ onFilterChange }) {
     coffeeTea: false,
     homemadeLiqueur: false,
     beer: false,
-    softDrink: false
+    softDrink: false,
   });
 
   const [types, setTypes] = useState({
     alcoholic: false,
     nonAlcoholic: false,
-    optionalAlcohol: false
+    optionalAlcohol: false,
   });
 
   const handleCategoryChange = (category) => {
     const updatedCategories = {
       ...categories,
-      [category]: !categories[category]
+      [category]: !categories[category],
     };
     setCategories(updatedCategories);
     onFilterChange({ categories: updatedCategories, types });
@@ -33,7 +33,7 @@ function Filter({ onFilterChange }) {
   const handleTypeChange = (type) => {
     const updatedTypes = {
       ...types,
-      [type]: !types[type]
+      [type]: !types[type],
     };
     setTypes(updatedTypes);
     onFilterChange({ categories, types: updatedTypes });

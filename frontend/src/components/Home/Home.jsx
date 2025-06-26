@@ -42,9 +42,7 @@ function Home() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch(
-          "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list"
-        );
+        const response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
         const data = await response.json();
         setCategories(data.drinks);
       } catch (error) {
@@ -113,9 +111,7 @@ function Home() {
     }
     try {
       const response = await fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(
-          category
-        )}`
+        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(category)}`
       );
       const data = await response.json();
       setSearchResults(data.drinks || []);
@@ -149,11 +145,7 @@ function Home() {
             gap: 8,
           }}
         >
-          <FaUserCircle
-            size={32}
-            color="#efcb58"
-            style={{ verticalAlign: "middle" }}
-          />
+          <FaUserCircle size={32} color="#efcb58" style={{ verticalAlign: "middle" }} />
           {user ? (
             <button
               onClick={handleLogout}
@@ -226,8 +218,7 @@ function Home() {
         >
           {categories.map((category) => {
             const normalizedName = category.strCategory.replace(/[\s/]+/g, "_");
-            const icon =
-              categoryIcons[normalizedName] || categoryIcons["default"];
+            const icon = categoryIcons[normalizedName] || categoryIcons["default"];
             return (
               <SwiperSlide key={normalizedName}>
                 <CardCategory
@@ -253,11 +244,7 @@ function Home() {
         </>
       )}
       <Footer />
-      <Popup
-        message={popupMessage}
-        show={showPopup}
-        onClose={() => setShowPopup(false)}
-      />
+      <Popup message={popupMessage} show={showPopup} onClose={() => setShowPopup(false)} />
     </div>
   );
 }

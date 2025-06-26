@@ -1,5 +1,5 @@
-import React from 'react'
-import styles from './Banner.module.css'
+import React from "react";
+import styles from "./Banner.module.css";
 
 function Banner() {
   return (
@@ -7,7 +7,7 @@ function Banner() {
       <img src="/drinks.jpg" alt="Drinks" />
       <p className={styles.text}>Your next favorite drink awaits!</p>
     </div>
-  )
+  );
 }
 
-export default Banner
+export default Banner;

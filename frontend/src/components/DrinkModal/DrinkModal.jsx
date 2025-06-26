@@ -28,9 +28,8 @@ const DrinkModal = ({ onClose }) => {
   const ingredients = [];
   for (let i = 1; i <= 15; i++) {
     const ingredient = drinkDetails[`strIngredient${i}`]
-      ? (drinkDetails[`strMeasure${i}`]
-          ? drinkDetails[`strMeasure${i}`] + " "
-          : "") + drinkDetails[`strIngredient${i}`]
+      ? (drinkDetails[`strMeasure${i}`] ? drinkDetails[`strMeasure${i}`] + " " : "") +
+        drinkDetails[`strIngredient${i}`]
       : "";
     if (ingredient) ingredients.push(ingredient);
   }

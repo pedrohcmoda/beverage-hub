@@ -42,18 +42,15 @@ export default function Login({ onLogin }) {
         </Link>
         <div className={styles.headerSearch}></div>
       </div>
-      <div style={{display: "flex", flexDirection: "column", justifyContent: "center" }}>
-        <form
-          className={stylesAuth.loginContainer}
-          onSubmit={handleSubmit}
-        >
+      <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <form className={stylesAuth.loginContainer} onSubmit={handleSubmit}>
           <h2 className={stylesAuth.loginTitle}>Login</h2>
           <input
             className={stylesAuth.input}
             type="email"
             placeholder="Email"
             value={email}
-            onChange={e => setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input
@@ -61,13 +58,10 @@ export default function Login({ onLogin }) {
             type="password"
             placeholder="Password"
             value={password}
-            onChange={e => setPassword(e.target.value)}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button
-            className={stylesAuth.button}
-            type="submit"
-          >
+          <button className={stylesAuth.button} type="submit">
             Sign in
           </button>
           <div style={{ marginTop: "1.2rem", textAlign: "center" }}>
@@ -81,19 +75,15 @@ export default function Login({ onLogin }) {
                 textDecoration: "underline",
                 fontSize: "1rem",
                 marginTop: "0.5rem",
-                display: "inline-block"
+                display: "inline-block",
               }}
             >
               Create your account
             </Link>
           </div>
         </form>
-        <Popup
-          message={erro}
-          show={showPopup && !!erro}
-          onClose={() => setShowPopup(false)}
-        />
+        <Popup message={erro} show={showPopup && !!erro} onClose={() => setShowPopup(false)} />
       </div>
-      </>
+    </>
   );
 }

@@ -5,13 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import styles from "./SearchBar.module.css";
 import { GiCutLemon } from "react-icons/gi";
 
-function SearchBar({
-  value,
-  onChange,
-  selectedCategory,
-  onCategoryChange,
-  onSearch,
-}) {
+function SearchBar({ value, onChange, selectedCategory, onCategoryChange, onSearch }) {
   const [inputValue, setInputValue] = useState(value || "");
 
   useEffect(() => {
@@ -122,10 +116,7 @@ function SearchBar({
               sx={{
                 fontSize: 24,
                 color: selectedCategory === "cocktail" ? "#111" : "#888",
-                filter:
-                  selectedCategory === "cocktail"
-                    ? "grayscale(0%)"
-                    : "grayscale(100%)",
+                filter: selectedCategory === "cocktail" ? "grayscale(0%)" : "grayscale(100%)",
               }}
             />
           </ToggleButton>
@@ -134,10 +125,7 @@ function SearchBar({
               size={20}
               style={{
                 color: selectedCategory === "ingredient" ? "#111" : "#888",
-                filter:
-                  selectedCategory === "ingredient"
-                    ? "grayscale(0%)"
-                    : "grayscale(100%)",
+                filter: selectedCategory === "ingredient" ? "grayscale(0%)" : "grayscale(100%)",
               }}
             />
           </ToggleButton>
