@@ -1,11 +1,10 @@
-import { prisma } from '../config/db.js';
-
+import { prisma } from "../config/db.js";
 
 async function getAllDrinks() {
   return await prisma.drink.findMany({
     include: {
       ingredients: {
-        include: { ingredient: true }
+        include: { ingredient: true },
       },
       category: true,
       type: true,
@@ -18,7 +17,7 @@ async function getDrinkById(id) {
     where: { id },
     include: {
       ingredients: {
-        include: { ingredient: true }
+        include: { ingredient: true },
       },
       category: true,
       type: true,
@@ -31,12 +30,12 @@ async function getDrinkByName(name) {
     where: {
       name: {
         contains: name,
-        mode: 'insensitive'
-      }
+        mode: "insensitive",
+      },
     },
     include: {
       ingredients: {
-        include: { ingredient: true }
+        include: { ingredient: true },
       },
       category: true,
       type: true,
@@ -49,7 +48,7 @@ async function createDrink(data) {
     data,
     include: {
       ingredients: {
-        include: { ingredient: true }
+        include: { ingredient: true },
       },
       category: true,
       type: true,
@@ -63,7 +62,7 @@ async function updateDrink(id, data) {
     data,
     include: {
       ingredients: {
-        include: { ingredient: true }
+        include: { ingredient: true },
       },
       category: true,
       type: true,

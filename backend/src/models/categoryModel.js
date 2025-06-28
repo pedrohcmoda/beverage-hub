@@ -1,8 +1,7 @@
-import { prisma } from '../config/db.js';
+import { prisma } from "../config/db.js";
 
 async function getAllCategories() {
-  return await prisma.category.findMany({
-  });
+  return await prisma.category.findMany({});
 }
 
 async function getCategoryById(id) {
@@ -37,10 +36,4 @@ async function deleteCategory(id) {
   return await prisma.category.delete({ where: { id } });
 }
 
-export {
-  getAllCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-};
+export { getAllCategories, getCategoryById, createCategory, updateCategory, deleteCategory };
