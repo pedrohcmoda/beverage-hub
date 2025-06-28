@@ -90,6 +90,7 @@ function Home() {
         setMostraResultadoBusca(true);
       }
     } catch (error) {
+      console.log(error);
       setPopupMessage('Erro ao buscar. Tente novamente!');
       setShowPopup(true);
       setSearchResults([]);
@@ -143,20 +144,39 @@ function Home() {
         >
           <FaUserCircle size={32} color="#efcb58" style={{ verticalAlign: "middle" }} />
           {user ? (
-            <button
-              onClick={handleLogout}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: "1rem",
-                marginLeft: 4,
-              }}
-            >
-              Logout
-            </button>
+            <>
+              <button
+                onClick={handleLogout}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  marginLeft: 4,
+                }}
+              >
+                Logout
+              </button>
+              <Link
+                to="/management"
+                style={{
+                  background: "#4caf50",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  marginLeft: 8,
+                  textDecoration: "none",
+                  borderRadius: 4,
+                  padding: "4px 12px"
+                }}
+              >
+                Gerenciar
+              </Link>
+            </>
           ) : (
             <Link
               to="/login"
