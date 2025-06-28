@@ -74,4 +74,23 @@ async function deleteDrink(id) {
   return await prisma.drink.delete({ where: { id } });
 }
 
-export { getAllDrinks, getDrinkById, getDrinkByName, createDrink, updateDrink, deleteDrink };
+async function getRandomDrink() {
+  const count = await prisma.drink.count();
+  if (count === 0) return null;
+
+  const randomIndex = Math.floor(Math.random() * count);
+
+  const [randomDrink] = await prisma.drink.findMany({
+    skip: randomIndex,
+    take: 1,
+    include: {
+      ingredients: { include: { ingredient: true } },
+      category: true,
+      type: true,
+    },
+  });
+
+  return randomDrink || null;
+}
+
+export { getAllDrinks, getDrinkById, getDrinkByName, createDrink, updateDrink, deleteDrink, getRandomDrink };

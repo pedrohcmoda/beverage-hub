@@ -10,9 +10,9 @@ function CardResult({ drink, onClick }) {
       style={{ cursor: "pointer" }}
     >
       <div className={styles.imageContainer}>
-        <img src={drink.strDrinkThumb} alt={drink.strDrink} className={styles.drinkImage} />
+        <img src={drink.image} alt={drink.name} className={styles.drinkImage} />
       </div>
-      <div className={styles.drinkName}>{drink.strDrink}</div>
+      <div className={styles.drinkName}>{drink.name}</div>
     </div>
   );
 }

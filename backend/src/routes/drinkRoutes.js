@@ -6,6 +6,7 @@ import {
   createDrink,
   updateDrink,
   deleteDrink,
+  getRandomDrink,
 } from "../models/drinkModel.js";
 
 const router = express.Router();
@@ -14,6 +15,16 @@ router.get("/", async (req, res) => {
   try {
     const drinks = await getAllDrinks();
     res.json(drinks);
+  } catch (error) {
+    console.error("Error fetching drinks:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+router.get("/random", async (req, res) => {
+   try {
+    const randomDrink = await getRandomDrink();
+    res.json(randomDrink);
   } catch (error) {
     console.error("Error fetching drinks:", error);
     res.status(500).json({ error: "Internal Server Error" });

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import styles from "./DrinkModal.module.css";
-import { useContext } from "react";
-import { DrinkContext } from "../../context/DrinkProvider";
+import React, { useState, useEffect } from 'react';
+import styles from './DrinkModal.module.css';
+import { useContext } from 'react';
+import { DrinkContext } from '../../context/DrinkProvider';
 
 const DrinkModal = ({ onClose }) => {
   const { selectedDrink } = useContext(DrinkContext);
@@ -9,13 +9,15 @@ const DrinkModal = ({ onClose }) => {
 
   useEffect(() => {
     const fetchDrinkDetails = async () => {
-      if (selectedDrink?.idDrink) {
-        const response = await fetch(
-          `https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${selectedDrink.idDrink}`
-        );
-        const data = await response.json();
-        if (data.drinks) {
-          setDrinkDetails(data.drinks[0]);
+      if (selectedDrink?.id) {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/api/drinks/${selectedDrink.id}`
+          );
+          const data = await response.json();
+          setDrinkDetails(data);
+        } catch (error) {
+          setDrinkDetails(null);
         }
       }
     };
@@ -25,14 +27,13 @@ const DrinkModal = ({ onClose }) => {
 
   if (!drinkDetails) return null;
 
-  const ingredients = [];
-  for (let i = 1; i <= 15; i++) {
-    const ingredient = drinkDetails[`strIngredient${i}`]
-      ? (drinkDetails[`strMeasure${i}`] ? drinkDetails[`strMeasure${i}`] + " " : "") +
-        drinkDetails[`strIngredient${i}`]
-      : "";
-    if (ingredient) ingredients.push(ingredient);
-  }
+  const ingredients = drinkDetails.ingredients
+    ? drinkDetails.ingredients.map((ing) =>
+        ing.amount
+          ? `${ing.amount} ${ing.ingredient.name}`
+          : ing.ingredient.name
+      )
+    : [];
 
   return (
     <div className={styles.overlay} onClick={onClose}>
@@ -41,12 +42,12 @@ const DrinkModal = ({ onClose }) => {
           ×
         </button>
         <img
-          src={drinkDetails.strDrinkThumb}
-          alt={drinkDetails.strDrink}
+          src={drinkDetails.image}
+          alt={drinkDetails.name}
           className={styles.modalImage}
         />
-        <h2>{drinkDetails.strDrink}</h2>
-        <p>{drinkDetails.strInstructions}</p>
+        <h2>{drinkDetails.name}</h2>
+        <p>{drinkDetails.instructions}</p>
         <ul>
           {ingredients.map((ing, idx) => (
             <li key={idx}>{ing}</li>
