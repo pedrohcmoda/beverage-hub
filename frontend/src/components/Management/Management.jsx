@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Management.module.css";
 import { FaUserCircle, FaEdit, FaTrash, FaUsers } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import SearchBar from "../SearchBar/SearchBar";
 import CategoryModal from "./CategoryModal";
 import DrinkModal from "./DrinkModal";
 import IngredientModal from "./IngredientModal";
@@ -8,7 +10,10 @@ import Pagination from "./Pagination";
 
 function Management() {
   const [user, setUser] = useState(null);
+  const [drinks, setDrinks] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [search, setSearch] = useState("");
   const [showType, setShowType] = useState("drinks");
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [editCategory, setEditCategory] = useState(null);
@@ -16,6 +21,7 @@ function Management() {
   const [editDrink, setEditDrink] = useState(null);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
   const [editIngredient, setEditIngredient] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch("http://localhost:3001/api/auth/me", { credentials: "include" })
@@ -39,6 +45,27 @@ function Management() {
         .then((data) => setCategories(data));
     }
   }, [showType]);
+
+  const handleLogout = async () => {
+    await fetch("http://localhost:3001/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+    setUser(null);
+    navigate("/login");
+  };
+
+  const handleSearchChange = (value) => setSearch(value);
+
+  const filteredDrinks = drinks.filter((d) =>
+    d.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredIngredients = ingredients.filter((i) =>
+    i.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredCategories = categories.filter((c) =>
+    c.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const openAddCategory = () => {
     setEditCategory(null);
@@ -97,6 +124,7 @@ function Management() {
     setShowType("drinks");
     fetch("http://localhost:3001/api/drinks")
       .then((res) => res.json())
+      .then((data) => setDrinks(data));
   };
 
   const openAddIngredient = () => {
@@ -131,6 +159,8 @@ function Management() {
 
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  useEffect(() => { setPage(1); }, [showType, search]);
 
   const getPaginated = (arr) => {
     const start = (page - 1) * rowsPerPage;
