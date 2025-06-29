@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE } from "../../apiBase";
 import styles from "./Drink.module.css";
 
 function Drink() {
@@ -7,7 +8,7 @@ function Drink() {
   useEffect(() => {
     async function fetchDrink() {
       try {
-        const response = await fetch("http://localhost:3001/api/drinks/random");
+        const response = await fetch(`${API_BASE}/api/drinks/random`);
         const data = await response.json();
         setDrink(data);
       } catch (error) {
@@ -23,11 +24,7 @@ function Drink() {
 
   return (
     <div className={styles.container}>
-      <img
-        className={styles.image}
-        src={drink.image}
-        alt={drink.name}
-      />
+      <img className={styles.image} src={drink.image} alt={drink.name} />
       <div className={styles.content}>
         <h3 className={styles.title}>{drink.name}</h3>
         <h4 className={styles.type}>{drink.type?.name || drink.type}</h4>

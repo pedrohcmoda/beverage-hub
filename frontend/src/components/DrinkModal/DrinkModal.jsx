@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import styles from './DrinkModal.module.css';
-import { useContext } from 'react';
-import { DrinkContext } from '../../context/DrinkProvider';
+import React, { useState, useEffect } from "react";
+import styles from "./DrinkModal.module.css";
+import { useContext } from "react";
+import { DrinkContext } from "../../context/DrinkProvider";
+import { API_BASE } from "../../apiBase";
 
 const DrinkModal = ({ onClose }) => {
   const { selectedDrink } = useContext(DrinkContext);
@@ -11,9 +12,7 @@ const DrinkModal = ({ onClose }) => {
     const fetchDrinkDetails = async () => {
       if (selectedDrink?.id) {
         try {
-          const response = await fetch(
-            `http://localhost:3001/api/drinks/${selectedDrink.id}`
-          );
+          const response = await fetch(`${API_BASE}/api/drinks/${selectedDrink.id}`);
           const data = await response.json();
           setDrinkDetails(data);
         } catch (error) {
@@ -29,9 +28,7 @@ const DrinkModal = ({ onClose }) => {
 
   const ingredients = drinkDetails.ingredients
     ? drinkDetails.ingredients.map((ing) =>
-        ing.amount
-          ? `${ing.amount} ${ing.ingredient.name}`
-          : ing.ingredient.name
+        ing.amount ? `${ing.amount} ${ing.ingredient.name}` : ing.ingredient.name
       )
     : [];
 
@@ -41,11 +38,7 @@ const DrinkModal = ({ onClose }) => {
         <button className={styles.closeBtn} onClick={onClose}>
           ×
         </button>
-        <img
-          src={drinkDetails.image}
-          alt={drinkDetails.name}
-          className={styles.modalImage}
-        />
+        <img src={drinkDetails.image} alt={drinkDetails.name} className={styles.modalImage} />
         <h2>{drinkDetails.name}</h2>
         <p>{drinkDetails.instructions}</p>
         <ul>

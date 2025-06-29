@@ -14,18 +14,22 @@ function IngredientModal({ open, onClose, onSave, initialData }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h3>{initialData ? "Editar Ingrediente" : "Cadastrar Ingrediente"}</h3>
+        <h3>{initialData ? "Edit Ingredient" : "Add Ingredient"}</h3>
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault();
             onSave({ name });
           }}
         >
-          <label>Nome do Ingrediente*</label>
-          <input value={name} onChange={e => setName(e.target.value)} required />
+          <label>Ingredient Name*</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} required />
           <div className={styles.actions}>
-            <button type="button" className={styles.cancel} onClick={onClose}>Cancelar</button>
-            <button type="submit" className={styles.confirm}>Confirmar</button>
+            <button type="button" className={styles.cancel} onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className={styles.confirm}>
+              Confirm
+            </button>
           </div>
         </form>
       </div>

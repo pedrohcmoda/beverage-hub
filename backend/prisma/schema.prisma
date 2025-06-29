@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DIRECT_URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -15,6 +15,11 @@ model User {
   createdAt DateTime @default(now())
 }
 
+enum AlcoholType {
+  ALCOOLICO
+  NAO_ALCOOLICO
+}
+
 model Drink {
   id           Int              @id @default(autoincrement())
   name         String
@@ -22,6 +27,7 @@ model Drink {
   image        String?
   categoryId   Int?
   typeId       Int?
+  alcoholType  AlcoholType      @default(ALCOOLICO)
   category     Category?        @relation(fields: [categoryId], references: [id])
   type         Type?            @relation(fields: [typeId], references: [id])
   ingredients  DrinkIngredient[]
@@ -51,7 +57,7 @@ model DrinkIngredient {
   drinkId      Int
   ingredientId Int
   drink        Drink      @relation(fields: [drinkId], references: [id])
-  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id], onDelete: Restrict)
 
   @@unique([drinkId, ingredientId])
 }

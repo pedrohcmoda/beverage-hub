@@ -6,12 +6,13 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { DrinkProvider } from "./context/DrinkProvider";
 import React, { useState, useEffect } from "react";
+import { API_BASE } from "./apiBase";
 
 function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/auth/me", {
+    fetch(`${API_BASE}/api/auth/me`, {
       credentials: "include",
     })
       .then((res) => (res.ok ? res.json() : null))

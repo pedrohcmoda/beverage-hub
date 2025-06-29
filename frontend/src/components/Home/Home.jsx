@@ -12,6 +12,7 @@ import SearchResults from "../SearchResults/SearchResults";
 import { Link, useNavigate } from "react-router-dom";
 import Popup from "../Popup/Popup";
 import { FaUserCircle } from "react-icons/fa";
+import { API_BASE } from "../../apiBase";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -40,20 +41,20 @@ function Home() {
   };
 
   useEffect(() => {
-      async function fetchCategories() {
-        try {
-          const response = await fetch('http://localhost:3001/api/categories');
-          const data = await response.json();
-          setCategories(data);
-        } catch (error) {
-          console.error('Error: ', error);
-        }
+    async function fetchCategories() {
+      try {
+        const response = await fetch(`${API_BASE}/api/categories`);
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Error: ", error);
       }
-      fetchCategories();
-    }, []);
+    }
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/auth/me", {
+    fetch(`${API_BASE}/api/auth/me`, {
       credentials: "include",
     })
       .then((res) => (res.ok ? res.json() : null))
@@ -67,7 +68,7 @@ function Home() {
 
   const handleSearch = async (searchValue) => {
     if (!searchValue) {
-      setPopupMessage('Digite algo para buscar!');
+      setPopupMessage("Digite algo para buscar!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -76,12 +77,12 @@ function Home() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/api/drinks/name/${encodeURIComponent(searchValue)}`
+        `${API_BASE}/api/drinks/name/${encodeURIComponent(searchValue)}`
       );
       const data = await response.json();
       const drinks = Array.isArray(data) ? data : [data];
       if (!drinks.length || !drinks[0]) {
-        setPopupMessage('Nenhum resultado encontrado. Tente novamente!');
+        setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
         setShowPopup(true);
         setSearchResults([]);
         setMostraResultadoBusca(false);
@@ -91,7 +92,7 @@ function Home() {
       }
     } catch (error) {
       console.log(error);
-      setPopupMessage('Erro ao buscar. Tente novamente!');
+      setPopupMessage("Erro ao buscar. Tente novamente!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -107,20 +108,18 @@ function Home() {
     try {
       const category = categories.find((cat) => cat.name === categoryName);
       if (!category) return;
-      const response = await fetch(
-        `http://localhost:3001/api/categories/${category.id}`
-      );
+      const response = await fetch(`${API_BASE}/api/categories/${category.id}`);
       const data = await response.json();
       setSearchResults(data.drinks || []);
       setMostraResultadoBusca(true);
       categoryCache.current[categoryName] = data.drinks || [];
     } catch (error) {
-      console.error('Error: ', error);
+      console.error("Error: ", error);
     }
   };
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3001/api/auth/logout", {
+    await fetch(`${API_BASE}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -171,7 +170,7 @@ function Home() {
                   marginLeft: 8,
                   textDecoration: "none",
                   borderRadius: 4,
-                  padding: "4px 12px"
+                  padding: "4px 12px",
                 }}
               >
                 Gerenciar
@@ -233,9 +232,8 @@ function Home() {
           }}
         >
           {categories.map((category) => {
-            const normalizedName = category.name.replace(/[\s/]+/g, '_');
-            const icon =
-              categoryIcons[normalizedName] || categoryIcons['default'];
+            const normalizedName = category.name.replace(/[\s/]+/g, "_");
+            const icon = categoryIcons[normalizedName] || categoryIcons["default"];
             return (
               <SwiperSlide key={category.id}>
                 <CardCategory
@@ -261,11 +259,7 @@ function Home() {
         </>
       )}
       <Footer />
-      <Popup
-        message={popupMessage}
-        show={showPopup}
-        onClose={() => setShowPopup(false)}
-      />
+      <Popup message={popupMessage} show={showPopup} onClose={() => setShowPopup(false)} />
     </div>
   );
 }

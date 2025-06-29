@@ -1,40 +1,45 @@
 import React, { useState, useEffect } from "react";
+import { API_BASE } from "../../apiBase";
 import styles from "./DrinkModal.module.css";
 import Pagination from "./Pagination";
 
-function DrinkModal({ open, onClose, onSave, initialData, categories }) {
+function DrinkModal({ open, onClose, onSave, initialData }) {
   const [name, setName] = useState(initialData?.name || "");
   const [instructions, setInstructions] = useState(initialData?.instructions || "");
-  const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
   const [allIngredients, setAllIngredients] = useState([]);
   const [ingredients, setIngredients] = useState(
     initialData?.ingredients?.length
-      ? initialData.ingredients.map(di => ({
+      ? initialData.ingredients.map((di) => ({
           ingredientId: di.ingredient?.id || di.ingredientId,
           name: di.ingredient?.name || "",
-          amount: di.amount || ""
+          amount: di.amount || "",
         }))
       : []
   );
   const [ingredientPage, setIngredientPage] = useState(1);
   const [ingredientsPerPage, setIngredientsPerPage] = useState(5);
+  const [image, setImage] = useState(initialData?.image || "");
+  const [imageFile, setImageFile] = useState(null);
+  const [alcoholType, setAlcoholType] = useState(initialData?.alcoholType || "ALCOOLICO");
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/ingredients")
-      .then(res => res.json())
-      .then(data => setAllIngredients(data));
+    fetch(`${API_BASE}/api/ingredients`)
+      .then((res) => res.json())
+      .then((data) => setAllIngredients(data));
   }, [open]);
 
   useEffect(() => {
     setName(initialData?.name || "");
     setInstructions(initialData?.instructions || "");
-    setCategoryId(initialData?.categoryId || "");
+    setImage(initialData?.image || "");
+    setImageFile(null);
+    setAlcoholType(initialData?.alcoholType || "ALCOOLICO");
     setIngredients(
       initialData?.ingredients?.length
-        ? initialData.ingredients.map(di => ({
+        ? initialData.ingredients.map((di) => ({
             ingredientId: di.ingredient?.id || di.ingredientId,
             name: di.ingredient?.name || "",
-            amount: di.amount || ""
+            amount: di.amount || "",
           }))
         : []
     );
@@ -47,13 +52,18 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
   const handleAddIngredient = () => {
     setIngredients([...ingredients, { ingredientId: "", name: "", amount: "" }]);
   };
-  const handleRemoveIngredient = idx => {
+  const handleRemoveIngredient = (idx) => {
     setIngredients(ingredients.filter((_, i) => i !== idx));
   };
   const handleIngredientChange = (idx, field, value) => {
-    setIngredients(ingredients.map((ing, i) =>
-      i === idx ? { ...ing, [field]: value } : ing
-    ));
+    setIngredients(ingredients.map((ing, i) => (i === idx ? { ...ing, [field]: value } : ing)));
+  };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImage(URL.createObjectURL(file));
+    }
   };
 
   const totalIngredientPages = Math.ceil(ingredients.length / ingredientsPerPage) || 1;
@@ -67,59 +77,81 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <h3>{initialData ? "Editar Bebida" : "Cadastrar Bebida"}</h3>
+        <h3>{initialData ? "Edit Drink" : "Add Drink"}</h3>
         <form
-          onSubmit={e => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            onSave({
-              name,
-              instructions,
-              categoryId: categoryId,
-              ingredients: ingredients.map(ing => ({
-                ingredientId: Number(ing.ingredientId),
-                amount: ing.amount
-              }))
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("instructions", instructions);
+            ingredients.forEach((ing, idx) => {
+              formData.append(`ingredients[${idx}][ingredientId]`, ing.ingredientId);
+              formData.append(`ingredients[${idx}][amount]`, ing.amount);
             });
+            if (imageFile) {
+              formData.append("image", imageFile);
+            }
+            formData.append("alcoholType", alcoholType);
+            await onSave(formData);
           }}
+          encType="multipart/form-data"
         >
-          <label>Nome da Bebida*</label>
-          <input value={name} onChange={e => setName(e.target.value)} required />
-          <label>Instrução</label>
-          <input value={instructions} onChange={e => setInstructions(e.target.value)} />
-          <label>Categoria*</label>
-          <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
-            <option value="">Selecione</option>
-            {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
-            ))}
+          <label>Drink Name*</label>
+          <input value={name} onChange={(e) => setName(e.target.value)} required />
+          <label>Instructions</label>
+          <input value={instructions} onChange={(e) => setInstructions(e.target.value)} />
+          <label>Image</label>
+          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {image && (
+            <img
+              src={image}
+              alt="preview"
+              style={{ maxWidth: 120, maxHeight: 120, margin: "8px 0", borderRadius: 8 }}
+            />
+          )}
+          <label>Alcohol Type*</label>
+          <select value={alcoholType} onChange={(e) => setAlcoholType(e.target.value)} required>
+            <option value="ALCOOLICO">Alcoholic</option>
+            <option value="NAO_ALCOOLICO">Non-alcoholic</option>
           </select>
-          <label>Ingredientes</label>
+          <label>Ingredients</label>
           {paginatedIngredients.map((ing, idx) => {
             const realIdx = (ingredientPage - 1) * ingredientsPerPage + idx;
             return (
               <div key={realIdx} className={styles.ingredientRow}>
                 <select
                   value={ing.ingredientId}
-                  onChange={e => handleIngredientChange(realIdx, "ingredientId", e.target.value)}
+                  onChange={(e) => handleIngredientChange(realIdx, "ingredientId", e.target.value)}
                   required
                 >
-                  <option value="">Selecione</option>
-                  {allIngredients.map(ingr => (
-                    <option key={ingr.id} value={ingr.id}>{ingr.name}</option>
+                  <option value="">Select</option>
+                  {allIngredients.map((ingr) => (
+                    <option key={ingr.id} value={ingr.id}>
+                      {ingr.name}
+                    </option>
                   ))}
                 </select>
                 <input
                   type="text"
-                  placeholder="Quantidade"
+                  placeholder="Amount"
                   value={ing.amount}
-                  onChange={e => handleIngredientChange(realIdx, "amount", e.target.value)}
+                  onChange={(e) => handleIngredientChange(realIdx, "amount", e.target.value)}
                   style={{ width: 100, marginLeft: 8 }}
                   required
                 />
-                <button type="button" onClick={() => handleRemoveIngredient(realIdx)} className={styles.removeBtn}>-</button>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveIngredient(realIdx)}
+                  className={styles.removeBtn}
+                >
+                  -
+                </button>
               </div>
             );
           })}
+          <button type="button" onClick={handleAddIngredient} className={styles.addBtn}>
+            + Add Ingredient
+          </button>
           <Pagination
             page={ingredientPage}
             totalPages={totalIngredientPages}
@@ -128,10 +160,13 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
             setPage={setIngredientPage}
             totalRows={ingredients.length}
           />
-          <button type="button" onClick={handleAddIngredient} className={styles.addBtn}>+ Adicionar Ingrediente</button>
           <div className={styles.actions}>
-            <button type="button" className={styles.cancel} onClick={onClose}>Cancelar</button>
-            <button type="submit" className={styles.confirm}>Confirmar</button>
+            <button type="button" className={styles.cancel} onClick={onClose}>
+              Cancel
+            </button>
+            <button type="submit" className={styles.confirm}>
+              Confirm
+            </button>
           </div>
         </form>
       </div>

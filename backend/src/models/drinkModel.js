@@ -51,6 +51,7 @@ async function createDrink(data) {
       image: data.image,
       categoryId: parseInt(data.categoryId),
       typeId: data.typeId ? parseInt(data.typeId) : undefined,
+      alcoholType: data.alcoholType || "ALCOOLICO",
     },
   });
 
@@ -77,13 +78,36 @@ async function createDrink(data) {
 }
 
 async function updateDrink(id, data) {
-  return await prisma.drink.update({
+  const updateData = {
+    name: data.name,
+    instructions: data.instructions,
+    image: data.image,
+    categoryId: data.categoryId ? parseInt(data.categoryId) : undefined,
+    typeId: data.typeId ? parseInt(data.typeId) : undefined,
+    alcoholType: data.alcoholType || "ALCOOLICO",
+  };
+  const updatedDrink = await prisma.drink.update({
     where: { id },
-    data,
+    data: updateData,
+  });
+
+  await prisma.drinkIngredient.deleteMany({ where: { drinkId: id } });
+  if (Array.isArray(data.ingredients)) {
+    for (const ing of data.ingredients) {
+      await prisma.drinkIngredient.create({
+        data: {
+          drinkId: id,
+          ingredientId: ing.ingredientId,
+          amount: ing.amount,
+        },
+      });
+    }
+  }
+
+  return await prisma.drink.findUnique({
+    where: { id },
     include: {
-      ingredients: {
-        include: { ingredient: true },
-      },
+      ingredients: { include: { ingredient: true } },
       category: true,
       type: true,
     },
@@ -91,6 +115,7 @@ async function updateDrink(id, data) {
 }
 
 async function deleteDrink(id) {
+  await prisma.drinkIngredient.deleteMany({ where: { drinkId: id } });
   return await prisma.drink.delete({ where: { id } });
 }
 
@@ -113,4 +138,12 @@ async function getRandomDrink() {
   return randomDrink || null;
 }
 
-export { getAllDrinks, getDrinkById, getDrinkByName, createDrink, updateDrink, deleteDrink, getRandomDrink };
+export {
+  getAllDrinks,
+  getDrinkById,
+  getDrinkByName,
+  createDrink,
+  updateDrink,
+  deleteDrink,
+  getRandomDrink,
+};

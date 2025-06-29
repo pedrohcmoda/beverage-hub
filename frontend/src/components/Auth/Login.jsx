@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "../Home/Home.module.css";
 import stylesAuth from "./Login.module.css";
 import Popup from "../Popup/Popup";
+import { API_BASE } from "../../apiBase";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function Login({ onLogin }) {
     e.preventDefault();
     setErro("");
     try {
-      const res = await fetch("http://localhost:3001/api/auth/login", {
+      const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

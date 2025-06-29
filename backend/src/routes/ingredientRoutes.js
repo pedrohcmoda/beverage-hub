@@ -1,5 +1,11 @@
-import express from 'express';
-import { getAllIngredients, getIngredientById, createIngredient, updateIngredient, deleteIngredient } from '../models/ingredientModel.js';
+import express from "express";
+import {
+  getAllIngredients,
+  getIngredientById,
+  createIngredient,
+  updateIngredient,
+  deleteIngredient,
+} from "../models/ingredientModel.js";
 
 const router = express.Router();
 

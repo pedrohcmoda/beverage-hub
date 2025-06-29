@@ -8,6 +8,7 @@ import {
   deleteDrink,
   getRandomDrink,
 } from "../models/drinkModel.js";
+import upload from "../middleware/upload.js";
 
 const router = express.Router();
 
@@ -22,7 +23,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/random", async (req, res) => {
-   try {
+  try {
     const randomDrink = await getRandomDrink();
     res.json(randomDrink);
   } catch (error) {
@@ -53,9 +54,32 @@ router.get("/name/:name", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/upload", upload.single("image"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "Nenhuma imagem enviada." });
+  }
+  res.json({ imageUrl: `/uploads/${req.file.filename}` });
+});
+
+router.post("/", upload.single("image"), async (req, res) => {
   try {
-    const newDrink = await createDrink(req.body);
+    const drinkData = req.body;
+    if (req.body["ingredients[0][ingredientId]"]) {
+      const ingredients = [];
+      let idx = 0;
+      while (req.body[`ingredients[${idx}][ingredientId]`]) {
+        ingredients.push({
+          ingredientId: req.body[`ingredients[${idx}][ingredientId]`],
+          amount: req.body[`ingredients[${idx}][amount]`] || "",
+        });
+        idx++;
+      }
+      drinkData.ingredients = ingredients;
+    }
+    if (req.file) {
+      drinkData.image = `/uploads/${req.file.filename}`;
+    }
+    const newDrink = await createDrink(drinkData);
     res.status(201).json(newDrink);
   } catch (error) {
     console.error("Error creating drink:", error);
@@ -63,9 +87,25 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", upload.single("image"), async (req, res) => {
   try {
-    const updatedDrink = await updateDrink(parseInt(req.params.id), req.body);
+    const drinkData = req.body;
+    if (req.body["ingredients[0][ingredientId]"]) {
+      const ingredients = [];
+      let idx = 0;
+      while (req.body[`ingredients[${idx}][ingredientId]`]) {
+        ingredients.push({
+          ingredientId: req.body[`ingredients[${idx}][ingredientId]`],
+          amount: req.body[`ingredients[${idx}][amount]`] || "",
+        });
+        idx++;
+      }
+      drinkData.ingredients = ingredients;
+    }
+    if (req.file) {
+      drinkData.image = `/uploads/${req.file.filename}`;
+    }
+    const updatedDrink = await updateDrink(parseInt(req.params.id), drinkData);
     res.json(updatedDrink);
   } catch (error) {
     console.error("Error updating drink:", error);
