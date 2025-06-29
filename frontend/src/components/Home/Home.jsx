@@ -65,54 +65,54 @@ function Home() {
     setSearch(value);
   };
 
- const handleSearch = async (searchValue) => {
-  if (!searchValue) {
-    setPopupMessage("Digite algo para buscar!");
-    setShowPopup(true);
-    setSearchResults([]);
-    setMostraResultadoBusca(false);
-    return;
-  }
-
-  try {
-    const response = await fetch(
-      `${API_BASE}/api/drinks/name/${encodeURIComponent(searchValue)}`,
-      {
-        credentials: "include",
-      }
-    );
-
-    if (!response.ok) {
-      if (response.status === 401) {
-        setPopupMessage("Você precisa estar logado para buscar drinks.");
-      } else {
-        setPopupMessage("Erro ao buscar. Tente novamente!");
-      }
+  const handleSearch = async (searchValue) => {
+    if (!searchValue) {
+      setPopupMessage("Digite algo para buscar!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
       return;
     }
 
-    const data = await response.json();
-    const drinks = Array.isArray(data) ? data : [data];
-    if (!drinks.length || !drinks[0]) {
-      setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
+    try {
+      const response = await fetch(
+        `${API_BASE}/api/drinks/name/${encodeURIComponent(searchValue)}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          setPopupMessage("Você precisa estar logado para buscar drinks.");
+        } else {
+          setPopupMessage("Erro ao buscar. Tente novamente!");
+        }
+        setShowPopup(true);
+        setSearchResults([]);
+        setMostraResultadoBusca(false);
+        return;
+      }
+
+      const data = await response.json();
+      const drinks = Array.isArray(data) ? data : [data];
+      if (!drinks.length || !drinks[0]) {
+        setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
+        setShowPopup(true);
+        setSearchResults([]);
+        setMostraResultadoBusca(false);
+      } else {
+        setSearchResults(drinks);
+        setMostraResultadoBusca(true);
+      }
+    } catch (error) {
+      console.log(error);
+      setPopupMessage("Erro ao buscar. Tente novamente!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
-    } else {
-      setSearchResults(drinks);
-      setMostraResultadoBusca(true);
     }
-  } catch (error) {
-    console.log(error);
-    setPopupMessage("Erro ao buscar. Tente novamente!");
-    setShowPopup(true);
-    setSearchResults([]);
-    setMostraResultadoBusca(false);
-  }
-};
+  };
 
   const handleCategoryClick = async (categoryName) => {
     if (categoryCache.current[categoryName]) {

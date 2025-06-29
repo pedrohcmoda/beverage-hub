@@ -9,6 +9,7 @@ import {
   getRandomDrink,
 } from "../models/drinkModel.js";
 import upload from "../config/upload.js";
+import { authenticateJWT } from "../config/auth.js";
 
 const router = express.Router();
 
@@ -43,7 +44,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.get("/name/:name", async (req, res) => {
+router.get("/name/:name", authenticateJWT, async (req, res) => {
   try {
     const drink = await getDrinkByName(req.params.name);
     if (!drink) return res.status(404).json({ error: "Drink not found" });
