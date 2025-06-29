@@ -12,11 +12,11 @@ import SearchResults from "../SearchResults/SearchResults";
 import { Link, useNavigate } from "react-router-dom";
 import Popup from "../Popup/Popup";
 import { FaUserCircle } from "react-icons/fa";
+import { API_BASE } from "../../apiBase";
 
 function Home() {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("cocktail");
   const [searchResults, setSearchResults] = useState([]);
   const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
   const categoryCache = useRef({});
@@ -42,9 +42,9 @@ function Home() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch("https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list");
+        const response = await fetch(`${API_BASE}/api/categories`);
         const data = await response.json();
-        setCategories(data.drinks);
+        setCategories(data);
       } catch (error) {
         console.error("Error: ", error);
       }
@@ -53,7 +53,7 @@ function Home() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:3001/api/auth/me", {
+    fetch(`${API_BASE}/api/auth/me`, {
       credentials: "include",
     })
       .then((res) => (res.ok ? res.json() : null))
@@ -65,9 +65,9 @@ function Home() {
     setSearch(value);
   };
 
-  const handleSearch = async (searchValue, category) => {
+  const handleSearch = async (searchValue) => {
     if (!searchValue) {
-      setPopupMessage("Type something to search!");
+      setPopupMessage("Digite algo para buscar!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -75,55 +75,66 @@ function Home() {
     }
 
     try {
-      let url = "";
+      const response = await fetch(
+        `${API_BASE}/api/drinks/name/${encodeURIComponent(searchValue)}`,
+        {
+          credentials: "include",
+        }
+      );
 
-      if (category === "cocktail") {
-        url = `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${searchValue}`;
-      } else if (category === "ingredient") {
-        url = `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${searchValue}`;
+      if (!response.ok) {
+        if (response.status === 401) {
+          setPopupMessage("Você precisa estar logado para buscar drinks.");
+        } else {
+          setPopupMessage("Erro ao buscar. Tente novamente!");
+        }
+        setShowPopup(true);
+        setSearchResults([]);
+        setMostraResultadoBusca(false);
+        return;
       }
 
-      const response = await fetch(url);
       const data = await response.json();
-      if (!data.drinks && data.drinks != "no data found") {
+      const drinks = Array.isArray(data) ? data : [data];
+      if (!drinks.length || !drinks[0]) {
         setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
         setShowPopup(true);
         setSearchResults([]);
         setMostraResultadoBusca(false);
       } else {
-        setSearchResults(data.drinks);
+        setSearchResults(drinks);
         setMostraResultadoBusca(true);
       }
     } catch (error) {
+      console.log(error);
       setPopupMessage("Erro ao buscar. Tente novamente!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
-      console.error("Error: ", error);
     }
   };
 
-  const handleCategoryClick = async (category) => {
-    if (categoryCache.current[category]) {
-      setSearchResults(categoryCache.current[category]);
+  const handleCategoryClick = async (categoryName) => {
+    if (categoryCache.current[categoryName]) {
+      setSearchResults(categoryCache.current[categoryName]);
       setMostraResultadoBusca(true);
       return;
     }
     try {
-      const response = await fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${encodeURIComponent(category)}`
-      );
+      const category = categories.find((cat) => cat.name === categoryName);
+      if (!category) return;
+      const response = await fetch(`${API_BASE}/api/categories/${category.id}`);
       const data = await response.json();
       setSearchResults(data.drinks || []);
       setMostraResultadoBusca(true);
-      categoryCache.current[category] = data.drinks || [];
+      categoryCache.current[categoryName] = data.drinks || [];
     } catch (error) {
       console.error("Error: ", error);
     }
   };
 
   const handleLogout = async () => {
-    await fetch("http://localhost:3001/api/auth/logout", {
+    await fetch(`${API_BASE}/api/auth/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -147,20 +158,39 @@ function Home() {
         >
           <FaUserCircle size={32} color="#efcb58" style={{ verticalAlign: "middle" }} />
           {user ? (
-            <button
-              onClick={handleLogout}
-              style={{
-                background: "none",
-                border: "none",
-                color: "#fff",
-                fontWeight: 500,
-                cursor: "pointer",
-                fontSize: "1rem",
-                marginLeft: 4,
-              }}
-            >
-              Logout
-            </button>
+            <>
+              <button
+                onClick={handleLogout}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  marginLeft: 4,
+                }}
+              >
+                Logout
+              </button>
+              <Link
+                to="/management"
+                style={{
+                  background: "#4caf50",
+                  border: "none",
+                  color: "#fff",
+                  fontWeight: 500,
+                  cursor: "pointer",
+                  fontSize: "1rem",
+                  marginLeft: 8,
+                  textDecoration: "none",
+                  borderRadius: 4,
+                  padding: "4px 12px",
+                }}
+              >
+                Gerenciar
+              </Link>
+            </>
           ) : (
             <Link
               to="/login"
@@ -190,13 +220,7 @@ function Home() {
           BeverageHub
         </Link>
         <div className={styles.headerSearch}>
-          <SearchBar
-            value={search}
-            onChange={handleSearchChange}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onSearch={handleSearch}
-          />
+          <SearchBar value={search} onChange={handleSearchChange} onSearch={handleSearch} />
         </div>
       </div>
       <Banner />
@@ -217,15 +241,15 @@ function Home() {
           }}
         >
           {categories.map((category) => {
-            const normalizedName = category.strCategory.replace(/[\s/]+/g, "_");
+            const normalizedName = category.name.replace(/[\s/]+/g, "_");
             const icon = categoryIcons[normalizedName] || categoryIcons["default"];
             return (
-              <SwiperSlide key={normalizedName}>
+              <SwiperSlide key={category.id}>
                 <CardCategory
-                  category={category.strCategory}
+                  category={category.name}
                   icon={icon}
                   onClick={() => {
-                    handleCategoryClick(category.strCategory);
+                    handleCategoryClick(category.name);
                   }}
                 />
               </SwiperSlide>

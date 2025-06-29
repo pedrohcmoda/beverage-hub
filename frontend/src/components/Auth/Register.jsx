@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { API_BASE } from "../../apiBase";
 import styles from "../Home/Home.module.css";
 import stylesAuth from "./Login.module.css";
 
@@ -13,7 +14,7 @@ export default function Register({ onRegister }) {
     e.preventDefault();
     setErro("");
     try {
-      const res = await fetch("http://localhost:3001/api/auth/register", {
+      const res = await fetch(`${API_BASE}/api/auth/register`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

@@ -1,7 +1,10 @@
 import React from "react";
+import { API_BASE } from "../../apiBase";
 import styles from "./CardResult.module.css";
 
 function CardResult({ drink, onClick }) {
+  const imageUrl = drink.image?.startsWith("/uploads/") ? `${API_BASE}${drink.image}` : drink.image;
+
   return (
     <div
       className={styles.cardContainer}
@@ -10,9 +13,9 @@ function CardResult({ drink, onClick }) {
       style={{ cursor: "pointer" }}
     >
       <div className={styles.imageContainer}>
-        <img src={drink.strDrinkThumb} alt={drink.strDrink} className={styles.drinkImage} />
+        <img src={imageUrl} alt={drink.name} className={styles.drinkImage} />
       </div>
-      <div className={styles.drinkName}>{drink.strDrink}</div>
+      <div className={styles.drinkName}>{drink.name}</div>
     </div>
   );
 }
