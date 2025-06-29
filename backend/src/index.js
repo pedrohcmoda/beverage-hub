@@ -17,7 +17,14 @@ const app = express();
 // );
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://138.97.132.151:5173", "http://179.154.179.162:5173"],
+    origin: [
+      "http://localhost:5173",
+      "http://138.97.132.151:5173",
+      "http://179.154.179.162:5173",
+      "https://beverage-pouxca21y-pedrohcmodas-projects.vercel.app",
+      "https://beverage-hub.vercel.app",
+      "https://backend-cold-violet-7320.fly.dev",
+    ],
     credentials: true,
   })
 );

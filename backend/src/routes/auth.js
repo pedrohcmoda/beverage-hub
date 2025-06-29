@@ -11,12 +11,19 @@ import { findUserByEmail, createUser, findUserById } from "../models/user.js";
 const router = express.Router();
 const prisma = new PrismaClient();
 
+function getCookieDomain() {
+  if (process.env.NODE_ENV === "production") {
+    return "beverage-pouxca21y-pedrohcmodas-projects.vercel.app";
+  }
+  return "localhost";
+}
+
 function setAuthCookie(res, token) {
   res.cookie("token", token, {
     httpOnly: true,
     sameSite: "lax",
     maxAge: 1000 * 60 * 60 * 24 * 7,
-    domain: process.env.COOKIE_DOMAIN,
+    domain: getCookieDomain(),
     path: "/",
   });
 }
@@ -75,7 +82,7 @@ router.post("/login", loginLimiter, sanitizeBody, async (req, res) => {
 });
 
 router.post("/logout", (req, res) => {
-  res.clearCookie("token", { domain: process.env.COOKIE_DOMAIN, path: "/" });
+  res.clearCookie("token", { domain: getCookieDomain(), path: "/" });
   logEvent(`Logout`);
   res.json({ ok: true });
 });
