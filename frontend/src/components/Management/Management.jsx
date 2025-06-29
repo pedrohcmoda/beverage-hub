@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styles from "./Management.module.css";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaUserCircle } from "react-icons/fa";
 import DrinkModal from "./DrinkModal";
 import IngredientModal from "./IngredientModal";
 import Pagination from "./Pagination";
 import { API_BASE } from "../../apiBase";
+import { Link, useNavigate } from "react-router-dom";
 
 function Management() {
   const [drinks, setDrinks] = useState([]);
@@ -14,6 +15,7 @@ function Management() {
   const [editDrink, setEditDrink] = useState(null);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
   const [editIngredient, setEditIngredient] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (showType === "drinks") {
@@ -103,6 +105,57 @@ function Management() {
 
   return (
     <div className={styles.managementContainer}>
+      <div className={styles.header}>
+        <div
+          style={{
+            position: "absolute",
+            left: 20,
+            top: "50%",
+            transform: "translateY(-50%)",
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <FaUserCircle size={32} color="#efcb58" style={{ verticalAlign: "middle" }} />
+          <button
+            onClick={() => navigate(-1)}
+            style={{
+              background: "#4caf50",
+              border: "none",
+              color: "#fff",
+              fontWeight: 500,
+              cursor: "pointer",
+              fontSize: "1rem",
+              marginLeft: 8,
+              textDecoration: "none",
+              borderRadius: 4,
+              padding: "4px 12px",
+            }}
+          >
+            Back
+          </button>
+        </div>
+        <Link
+          to="/"
+          className={styles.logo}
+          style={{
+            fontFamily: "Alex Brush, cursive",
+            fontSize: "2.5rem",
+            color: "#fff",
+            fontWeight: 400,
+            margin: 0,
+            whiteSpace: "nowrap",
+            textDecoration: "none",
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          BeverageHub
+        </Link>
+      </div>
       <div className={styles.managementContent}>
         <div className={styles.managementHeader}>
           <h2>Manage {showType === "drinks" ? "Drinks" : "Ingredients"}</h2>

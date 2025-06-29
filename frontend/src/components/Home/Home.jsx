@@ -173,7 +173,7 @@ function Home() {
                   padding: "4px 12px",
                 }}
               >
-                Gerenciar
+                Management
               </Link>
             </>
           ) : (

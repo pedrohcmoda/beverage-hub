@@ -4,21 +4,31 @@
 }
 
 .header {
-  background: #222;
-  color: #fff;
-  padding: 16px 0;
   position: relative;
+  width: 100%;
+  background: #181e25;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
+  padding: 0 2vw;
+  height: 70px;
+  z-index: 10;
+  top: 0;
+  left: 0;
 }
 
 .logo {
-  font-size: 2rem;
-  font-weight: bold;
-  color: #efcb58;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Alex Brush", cursive;
+  font-size: 2.5rem;
+  color: #fff;
+  font-weight: 400;
+  margin: 0;
+  white-space: nowrap;
   text-decoration: none;
-  margin: 0 auto;
 }
 
 .headerSearch {
