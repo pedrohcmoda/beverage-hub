@@ -6,6 +6,8 @@ import IngredientModal from "./IngredientModal";
 import Pagination from "./Pagination";
 import { API_BASE } from "../../apiBase";
 import { Link, useNavigate } from "react-router-dom";
+import ConfirmModal from "../ConfirmModal/ConfirmModal";
+import Popup from "../Popup/Popup";
 
 function Management() {
   const [drinks, setDrinks] = useState([]);
@@ -15,6 +17,9 @@ function Management() {
   const [editDrink, setEditDrink] = useState(null);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
   const [editIngredient, setEditIngredient] = useState(null);
+  const [deleteTarget, setDeleteTarget] = useState(null); // { type: 'drink'|'ingredient', item }
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [popup, setPopup] = useState({ show: false, message: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -102,6 +107,33 @@ function Management() {
   };
   const totalRows = showType === "drinks" ? drinks.length : ingredients.length;
   const totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    let url, type, setList;
+    if (deleteTarget.type === "drink") {
+      url = `${API_BASE}/api/drinks/${deleteTarget.item.id}`;
+      type = "drink";
+      setList = setDrinks;
+    } else if (deleteTarget.type === "ingredient") {
+      url = `${API_BASE}/api/ingredients/${deleteTarget.item.id}`;
+      type = "ingredient";
+      setList = setIngredients;
+    }
+    try {
+      const res = await fetch(url, { method: "DELETE", credentials: "include" });
+      if (!res.ok) {
+        const data = await res.json();
+        setPopup({ show: true, message: data.error || `Não foi possível deletar este ${type}.` });
+      } else {
+        setList((prev) => prev.filter((i) => i.id !== deleteTarget.item.id));
+      }
+    } catch (err) {
+      setPopup({ show: true, message: `Erro ao deletar o ${type}.` });
+    }
+    setShowDeleteModal(false);
+    setDeleteTarget(null);
+  };
 
   return (
     <div className={styles.managementContainer}>
@@ -198,11 +230,17 @@ function Management() {
                         : item.instructions
                       : "-"}
                   </td>
-                  <td>
+                  <td className={styles.actionsRight}>
                     <button className={styles.actionBtn} onClick={() => openEditDrink(item)}>
                       <FaEdit />
                     </button>
-                    <button className={styles.actionBtn}>
+                    <button
+                      className={styles.actionBtn}
+                      onClick={() => {
+                        setDeleteTarget({ type: "drink", item });
+                        setShowDeleteModal(true);
+                      }}
+                    >
                       <FaTrash />
                     </button>
                   </td>
@@ -222,11 +260,17 @@ function Management() {
               {getPaginated(ingredients).map((item) => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
-                  <td>
+                  <td className={styles.actionsRight}>
                     <button className={styles.actionBtn} onClick={() => openEditIngredient(item)}>
                       <FaEdit />
                     </button>
-                    <button className={styles.actionBtn}>
+                    <button
+                      className={styles.actionBtn}
+                      onClick={() => {
+                        setDeleteTarget({ type: "ingredient", item });
+                        setShowDeleteModal(true);
+                      }}
+                    >
                       <FaTrash />
                     </button>
                   </td>
@@ -255,6 +299,19 @@ function Management() {
         onClose={closeIngredientModal}
         onSave={handleSaveIngredient}
         initialData={editIngredient}
+      />
+      <ConfirmModal
+        message={`Are you sure you want to delete this ${deleteTarget?.type}?`}
+        show={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        confirmText="Delete"
+        cancelText="Cancel"
+      />
+      <Popup
+        message={popup.message}
+        show={popup.show}
+        onClose={() => setPopup({ show: false, message: "" })}
       />
     </div>
   );

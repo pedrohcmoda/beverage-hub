@@ -116,3 +116,9 @@
 .actionBtn:hover {
   filter: brightness(0.9);
 }
+
+.actionsRight {
+  text-align: right !important;
+  width: 1%;
+  white-space: nowrap;
+}

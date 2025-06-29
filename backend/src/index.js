@@ -6,8 +6,11 @@ import authRoutes from "./routes/auth.js";
 import drinkRoutes from "./routes/drinkRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import ingredientRoutes from "./routes/ingredientRoutes.js";
+import compression from "compression";
 
 const app = express();
+app.set("trust proxy", 1);
+app.use(compression());
 
 // app.use(
 //   cors({
@@ -30,7 +33,7 @@ app.use(
 );
 app.use(express.json());
 app.use(cookieParser());
-app.use("/uploads", express.static(path.resolve("public/uploads")));
+app.use("/uploads", express.static(path.resolve("public/uploads"), { maxAge: "7d" }));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/drinks", drinkRoutes);

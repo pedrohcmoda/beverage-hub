@@ -60,7 +60,7 @@ async function createDrink(data) {
       await prisma.drinkIngredient.create({
         data: {
           drinkId: newDrink.id,
-          ingredientId: ing.ingredientId,
+          ingredientId: parseInt(ing.ingredientId),
           amount: ing.amount,
         },
       });
@@ -97,7 +97,7 @@ async function updateDrink(id, data) {
       await prisma.drinkIngredient.create({
         data: {
           drinkId: id,
-          ingredientId: ing.ingredientId,
+          ingredientId: parseInt(ing.ingredientId),
           amount: ing.amount,
         },
       });

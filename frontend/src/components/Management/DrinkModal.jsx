@@ -21,11 +21,18 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
   const [image, setImage] = useState(initialData?.image || "");
   const [imageFile, setImageFile] = useState(null);
   const [alcoholType, setAlcoholType] = useState(initialData?.alcoholType || "ALCOOLICO");
+  const [allCategories, setAllCategories] = useState([]);
+  const [categoryId, setCategoryId] = useState(
+    initialData?.category?.id || initialData?.categoryId || ""
+  );
 
   useEffect(() => {
     fetch(`${API_BASE}/api/ingredients`)
       .then((res) => res.json())
       .then((data) => setAllIngredients(data));
+    fetch(`${API_BASE}/api/categories`)
+      .then((res) => res.json())
+      .then((data) => setAllCategories(data));
   }, [open]);
 
   useEffect(() => {
@@ -34,6 +41,7 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
     setImage(initialData?.image || "");
     setImageFile(null);
     setAlcoholType(initialData?.alcoholType || "ALCOOLICO");
+    setCategoryId(initialData?.category?.id || initialData?.categoryId || "");
     setIngredients(
       initialData?.ingredients?.length
         ? initialData.ingredients.map((di) => ({
@@ -92,6 +100,7 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
               formData.append("image", imageFile);
             }
             formData.append("alcoholType", alcoholType);
+            formData.append("categoryId", categoryId);
             await onSave(formData);
           }}
           encType="multipart/form-data"
@@ -119,6 +128,15 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
           <select value={alcoholType} onChange={(e) => setAlcoholType(e.target.value)} required>
             <option value="ALCOOLICO">Alcoholic</option>
             <option value="NAO_ALCOOLICO">Non-alcoholic</option>
+          </select>
+          <label>Category*</label>
+          <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required>
+            <option value="">Select</option>
+            {allCategories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
           </select>
           <label>Ingredients</label>
           {paginatedIngredients.map((ing, idx) => {
