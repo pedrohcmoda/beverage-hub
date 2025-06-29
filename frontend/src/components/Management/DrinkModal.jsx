@@ -106,7 +106,13 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
             <img
               src={image.startsWith("/uploads/") ? `${API_BASE}${image}` : image}
               alt="preview"
-              style={{ maxWidth: 120, maxHeight: 120, margin: "8px 0", borderRadius: 8 }}
+              style={{
+                display: "block",
+                maxWidth: 120,
+                maxHeight: 120,
+                margin: "8px 0 8px 0",
+                borderRadius: 8,
+              }}
             />
           )}
           <label>Alcohol Type*</label>
