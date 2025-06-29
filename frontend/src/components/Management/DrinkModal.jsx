@@ -4,7 +4,7 @@ import Pagination from "./Pagination";
 
 function DrinkModal({ open, onClose, onSave, initialData, categories }) {
   const [name, setName] = useState(initialData?.name || "");
-  const [description, setDescription] = useState(initialData?.description || "");
+  const [instructions, setInstructions] = useState(initialData?.instructions || "");
   const [categoryId, setCategoryId] = useState(initialData?.categoryId || "");
   const [allIngredients, setAllIngredients] = useState([]);
   const [ingredients, setIngredients] = useState(
@@ -27,7 +27,7 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
 
   useEffect(() => {
     setName(initialData?.name || "");
-    setDescription(initialData?.description || "");
+    setInstructions(initialData?.instructions || "");
     setCategoryId(initialData?.categoryId || "");
     setIngredients(
       initialData?.ingredients?.length
@@ -73,8 +73,8 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
             e.preventDefault();
             onSave({
               name,
-              description,
-              categoryId,
+              instructions,
+              categoryId: categoryId,
               ingredients: ingredients.map(ing => ({
                 ingredientId: Number(ing.ingredientId),
                 amount: ing.amount
@@ -84,8 +84,8 @@ function DrinkModal({ open, onClose, onSave, initialData, categories }) {
         >
           <label>Nome da Bebida*</label>
           <input value={name} onChange={e => setName(e.target.value)} required />
-          <label>Descrição</label>
-          <input value={description} onChange={e => setDescription(e.target.value)} />
+          <label>Instrução</label>
+          <input value={instructions} onChange={e => setInstructions(e.target.value)} />
           <label>Categoria*</label>
           <select value={categoryId} onChange={e => setCategoryId(e.target.value)} required>
             <option value="">Selecione</option>

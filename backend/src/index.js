@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.js";
 import drinkRoutes from "./routes/drinkRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import ingredientRoutes from "./routes/ingredientRoutes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use("/api/auth", authRoutes);
 app.use("/api/drinks", drinkRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/ingredients", ingredientRoutes);
 
 app.get("/", (req, res) => res.send("API ok"));
 

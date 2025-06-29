@@ -44,12 +44,32 @@ async function getDrinkByName(name) {
 }
 
 async function createDrink(data) {
-  return await prisma.drink.create({
-    data,
+  const newDrink = await prisma.drink.create({
+    data: {
+      name: data.name,
+      instructions: data.instructions,
+      image: data.image,
+      categoryId: parseInt(data.categoryId),
+      typeId: data.typeId ? parseInt(data.typeId) : undefined,
+    },
+  });
+
+  if (Array.isArray(data.ingredients)) {
+    for (const ing of data.ingredients) {
+      await prisma.drinkIngredient.create({
+        data: {
+          drinkId: newDrink.id,
+          ingredientId: ing.ingredientId,
+          amount: ing.amount,
+        },
+      });
+    }
+  }
+
+  return await prisma.drink.findUnique({
+    where: { id: newDrink.id },
     include: {
-      ingredients: {
-        include: { ingredient: true },
-      },
+      ingredients: { include: { ingredient: true } },
       category: true,
       type: true,
     },

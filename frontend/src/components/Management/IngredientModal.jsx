@@ -7,7 +7,6 @@ function IngredientModal({ open, onClose, onSave, initialData }) {
 
   useEffect(() => {
     setName(initialData?.name || "");
-    setDescription(initialData?.description || "");
   }, [initialData, open]);
 
   if (!open) return null;
@@ -19,13 +18,11 @@ function IngredientModal({ open, onClose, onSave, initialData }) {
         <form
           onSubmit={e => {
             e.preventDefault();
-            onSave({ name, description });
+            onSave({ name });
           }}
         >
           <label>Nome do Ingrediente*</label>
           <input value={name} onChange={e => setName(e.target.value)} required />
-          <label>Descrição</label>
-          <input value={description} onChange={e => setDescription(e.target.value)} />
           <div className={styles.actions}>
             <button type="button" className={styles.cancel} onClick={onClose}>Cancelar</button>
             <button type="submit" className={styles.confirm}>Confirmar</button>

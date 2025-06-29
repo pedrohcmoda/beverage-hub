@@ -46,6 +46,14 @@ function Management() {
     }
   }, [showType]);
 
+  useEffect(() => {
+  if (showDrinkModal) {
+    fetch("http://localhost:3001/api/categories")
+      .then((res) => res.json())
+      .then((data) => setCategories(data));
+  }
+}, [showDrinkModal]);
+
   const handleLogout = async () => {
     await fetch("http://localhost:3001/api/auth/logout", {
       method: "POST",
@@ -119,6 +127,7 @@ function Management() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
+      console.log(data);
     }
     setShowDrinkModal(false);
     setShowType("drinks");
@@ -194,7 +203,6 @@ function Management() {
             <thead>
               <tr>
                 <th>Nome</th>
-                <th>Descrição</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -202,7 +210,6 @@ function Management() {
               {getPaginated(filteredCategories).map((cat) => (
                 <tr key={cat.id}>
                   <td>{cat.name}</td>
-                  <td>{cat.description || "-"}</td>
                   <td>
                     <button className={styles.actionBtn} onClick={() => openEditCategory(cat)}><FaEdit /></button>
                     <button className={styles.actionBtn}><FaTrash /></button>
@@ -217,7 +224,7 @@ function Management() {
               <tr>
                 <th>Nome</th>
                 <th>Categoria</th>
-                <th>Descrição</th>
+                <th>Instrução</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -234,11 +241,16 @@ function Management() {
                           ? item.category.map(c => c.name || c).join(', ')
                           : "-"
                   }</td>
-                  <td>{item.description || "-"}</td>
+                  <td>
+                    {item.instructions
+                      ? item.instructions.length > 45
+                        ? item.instructions.slice(0, 45) + "..."
+                        : item.instructions
+                      : "-"}
+                  </td>
                   <td>
                     <button className={styles.actionBtn} onClick={() => openEditDrink(item)}><FaEdit /></button>
                     <button className={styles.actionBtn}><FaTrash /></button>
-                    <button className={styles.actionBtn}><FaUsers /></button>
                   </td>
                 </tr>
               ))}
@@ -249,7 +261,6 @@ function Management() {
             <thead>
               <tr>
                 <th>Nome</th>
-                <th>Descrição</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -257,7 +268,6 @@ function Management() {
               {getPaginated(filteredIngredients).map((item) => (
                 <tr key={item.id}>
                   <td>{item.name}</td>
-                  <td>{item.description || "-"}</td>
                   <td>
                     <button className={styles.actionBtn} onClick={() => openEditIngredient(item)}><FaEdit /></button>
                     <button className={styles.actionBtn}><FaTrash /></button>
