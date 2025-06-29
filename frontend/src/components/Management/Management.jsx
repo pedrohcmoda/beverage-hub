@@ -17,7 +17,7 @@ function Management() {
   const [editDrink, setEditDrink] = useState(null);
   const [showIngredientModal, setShowIngredientModal] = useState(false);
   const [editIngredient, setEditIngredient] = useState(null);
-  const [deleteTarget, setDeleteTarget] = useState(null); // { type: 'drink'|'ingredient', item }
+  const [deleteTarget, setDeleteTarget] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [popup, setPopup] = useState({ show: false, message: "" });
   const navigate = useNavigate();
