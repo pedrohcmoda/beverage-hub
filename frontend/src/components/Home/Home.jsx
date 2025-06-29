@@ -17,7 +17,6 @@ import { API_BASE } from "../../apiBase";
 function Home() {
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("cocktail");
   const [searchResults, setSearchResults] = useState([]);
   const [mostraResultadoBusca, setMostraResultadoBusca] = useState(false);
   const categoryCache = useRef({});
@@ -173,7 +172,7 @@ function Home() {
                   padding: "4px 12px",
                 }}
               >
-                Management
+                Gerenciar
               </Link>
             </>
           ) : (
@@ -205,13 +204,7 @@ function Home() {
           BeverageHub
         </Link>
         <div className={styles.headerSearch}>
-          <SearchBar
-            value={search}
-            onChange={handleSearchChange}
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-            onSearch={handleSearch}
-          />
+          <SearchBar value={search} onChange={handleSearchChange} onSearch={handleSearch} />
         </div>
       </div>
       <Banner />

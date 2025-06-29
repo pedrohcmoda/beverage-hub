@@ -8,7 +8,7 @@ import {
   deleteDrink,
   getRandomDrink,
 } from "../models/drinkModel.js";
-import upload from "../middleware/upload.js";
+import upload from "../config/upload.js";
 
 const router = express.Router();
 

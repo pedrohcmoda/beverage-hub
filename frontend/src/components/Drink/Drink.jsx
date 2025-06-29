@@ -22,9 +22,11 @@ function Drink() {
     return <div>Loading...</div>;
   }
 
+  const imageUrl = drink.image?.startsWith("/uploads/") ? `${API_BASE}${drink.image}` : drink.image;
+
   return (
     <div className={styles.container}>
-      <img className={styles.image} src={drink.image} alt={drink.name} />
+      <img className={styles.image} src={imageUrl} alt={drink.name} />
       <div className={styles.content}>
         <h3 className={styles.title}>{drink.name}</h3>
         <h4 className={styles.type}>{drink.type?.name || drink.type}</h4>

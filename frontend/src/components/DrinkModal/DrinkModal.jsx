@@ -38,7 +38,15 @@ const DrinkModal = ({ onClose }) => {
         <button className={styles.closeBtn} onClick={onClose}>
           ×
         </button>
-        <img src={drinkDetails.image} alt={drinkDetails.name} className={styles.modalImage} />
+        <img
+          src={
+            drinkDetails.image?.startsWith("/uploads/")
+              ? `${API_BASE}${drinkDetails.image}`
+              : drinkDetails.image
+          }
+          alt={drinkDetails.name}
+          className={styles.modalImage}
+        />
         <h2>{drinkDetails.name}</h2>
         <p>{drinkDetails.instructions}</p>
         <ul>

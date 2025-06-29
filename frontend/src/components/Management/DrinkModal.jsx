@@ -104,7 +104,7 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
           <input type="file" accept="image/*" onChange={handleImageChange} />
           {image && (
             <img
-              src={image}
+              src={image.startsWith("/uploads/") ? `${API_BASE}${image}` : image}
               alt="preview"
               style={{ maxWidth: 120, maxHeight: 120, margin: "8px 0", borderRadius: 8 }}
             />
