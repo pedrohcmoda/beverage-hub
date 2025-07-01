@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Popup from "../Popup/Popup";
 import { FaUserCircle } from "react-icons/fa";
 import { API_BASE } from "../../apiBase";
+import { useAuth } from "../../hooks/useAuth";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -22,7 +23,7 @@ function Home() {
   const categoryCache = useRef({});
   const [showPopup, setShowPopup] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
-  const [user, setUser] = useState(null);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const categoryIcons = {
@@ -43,22 +44,19 @@ function Home() {
     async function fetchCategories() {
       try {
         const response = await fetch(`${API_BASE}/api/categories`);
-        const data = await response.json();
-        setCategories(data);
+        if (response.ok) {
+          const data = await response.json();
+          setCategories(Array.isArray(data) ? data : []);
+        } else {
+          console.error("Failed to fetch categories:", response.status);
+          setCategories([]);
+        }
       } catch (error) {
-        console.error("Error: ", error);
+        console.error("Error fetching categories:", error);
+        setCategories([]);
       }
     }
     fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    fetch(`${API_BASE}/api/auth/me`, {
-      credentials: "include",
-    })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => setUser(data))
-      .catch(() => setUser(null));
   }, []);
 
   const handleSearchChange = (value) => {
@@ -67,7 +65,7 @@ function Home() {
 
   const handleSearch = async (searchValue) => {
     if (!searchValue) {
-      setPopupMessage("Digite algo para buscar!");
+      setPopupMessage("Type something to search!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -84,9 +82,9 @@ function Home() {
 
       if (!response.ok) {
         if (response.status === 401) {
-          setPopupMessage("Você precisa estar logado para buscar drinks.");
+          setPopupMessage("You need to be logged in to search drinks.");
         } else {
-          setPopupMessage("Erro ao buscar. Tente novamente!");
+          setPopupMessage("Search error. Try again!");
         }
         setShowPopup(true);
         setSearchResults([]);
@@ -97,7 +95,7 @@ function Home() {
       const data = await response.json();
       const drinks = Array.isArray(data) ? data : [data];
       if (!drinks.length || !drinks[0]) {
-        setPopupMessage("Nenhum resultado encontrado. Tente novamente!");
+        setPopupMessage("No results found. Try again!");
         setShowPopup(true);
         setSearchResults([]);
         setMostraResultadoBusca(false);
@@ -107,7 +105,7 @@ function Home() {
       }
     } catch (error) {
       console.log(error);
-      setPopupMessage("Erro ao buscar. Tente novamente!");
+      setPopupMessage("Search error. Try again!");
       setShowPopup(true);
       setSearchResults([]);
       setMostraResultadoBusca(false);
@@ -134,11 +132,7 @@ function Home() {
   };
 
   const handleLogout = async () => {
-    await fetch(`${API_BASE}/api/auth/logout`, {
-      method: "POST",
-      credentials: "include",
-    });
-    setUser(null);
+    await logout();
     navigate("/login");
   };
 
@@ -188,7 +182,7 @@ function Home() {
                   padding: "4px 12px",
                 }}
               >
-                Gerenciar
+                Management
               </Link>
             </>
           ) : (
@@ -240,7 +234,7 @@ function Home() {
             1920: { slidesPerView: 6 },
           }}
         >
-          {categories.map((category) => {
+          {Array.isArray(categories) && categories.length > 0 ? categories.map((category) => {
             const normalizedName = category.name.replace(/[\s/]+/g, "_");
             const icon = categoryIcons[normalizedName] || categoryIcons["default"];
             return (
@@ -254,7 +248,11 @@ function Home() {
                 />
               </SwiperSlide>
             );
-          })}
+          }) : (
+            <SwiperSlide>
+              <div>Loading categories...</div>
+            </SwiperSlide>
+          )}
         </Swiper>
       </div>
       {mostraResultadoBusca ? (

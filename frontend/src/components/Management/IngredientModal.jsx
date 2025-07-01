@@ -3,7 +3,6 @@ import styles from "./IngredientModal.module.css";
 
 function IngredientModal({ open, onClose, onSave, initialData }) {
   const [name, setName] = useState(initialData?.name || "");
-  const [description, setDescription] = useState(initialData?.description || "");
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {

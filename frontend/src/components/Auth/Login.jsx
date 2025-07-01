@@ -1,36 +1,28 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../Home/Home.module.css";
 import stylesAuth from "./Login.module.css";
 import Popup from "../Popup/Popup";
-import { API_BASE } from "../../apiBase";
+import { useAuth } from "../../hooks/useAuth";
 
-export default function Login({ onLogin }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
   const [showPopup, setShowPopup] = useState(false);
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro("");
-    try {
-      const res = await fetch(`${API_BASE}/api/auth/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setErro(data.error || "Erro ao logar");
-        setShowPopup(true);
-        return;
-      }
-      const user = await res.json();
-      onLogin(user);
-    } catch {
-      setErro("Erro de conexão");
+    
+    const result = await login(email, password);
+    
+    if (result.success) {
+      navigate("/");
+    } else {
+      setErro(result.error);
       setShowPopup(true);
     }
   };

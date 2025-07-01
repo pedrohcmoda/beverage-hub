@@ -28,7 +28,7 @@ router.get("/:id", authenticateJWT, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ error: "ID do ingrediente deve ser um número válido." });
+      return res.status(400).json({ error: "Ingredient ID must be a valid number." });
     }
     const cached = cache.get(`ingredient_${id}`);
     if (cached) return res.json(cached);
@@ -46,10 +46,10 @@ router.post("/", authenticateJWT, async (req, res) => {
   try {
     const { name } = req.body;
     if (!name || typeof name !== "string" || name.trim().length === 0) {
-      return res.status(400).json({ error: "Nome do ingrediente é obrigatório e deve ser um texto válido." });
+      return res.status(400).json({ error: "Ingredient name is required and must be valid text." });
     }
     if (name.trim().length > 100) {
-      return res.status(400).json({ error: "Nome do ingrediente deve ter no máximo 100 caracteres." });
+      return res.status(400).json({ error: "Ingredient name must have at most 100 characters." });
     }
     const newIngredient = await createIngredient({ name: name.trim() });
     cache.del("ingredients");  
@@ -57,7 +57,7 @@ router.post("/", authenticateJWT, async (req, res) => {
   } catch (error) {
     console.error("Error creating ingredient:", error);
     if (error.code === "P2002") {
-      return res.status(409).json({ error: "Já existe um ingrediente com este nome." });
+      return res.status(409).json({ error: "An ingredient with this name already exists." });
     }
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -67,14 +67,14 @@ router.put("/:id", authenticateJWT, async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ error: "ID do ingrediente deve ser um número válido." });
+      return res.status(400).json({ error: "Ingredient ID must be a valid number." });
     }
     const { name } = req.body;
     if (!name || typeof name !== "string" || name.trim().length === 0) {
-      return res.status(400).json({ error: "Nome do ingrediente é obrigatório e deve ser um texto válido." });
+      return res.status(400).json({ error: "Ingredient name is required and must be valid text." });
     }
     if (name.trim().length > 100) {
-      return res.status(400).json({ error: "Nome do ingrediente deve ter no máximo 100 caracteres." });
+      return res.status(400).json({ error: "Ingredient name must have at most 100 characters." });
     }
     const updatedIngredient = await updateIngredient(id, { name: name.trim() });
     cache.del("ingredients");  
@@ -83,10 +83,10 @@ router.put("/:id", authenticateJWT, async (req, res) => {
   } catch (error) {
     console.error("Error updating ingredient:", error);
     if (error.code === "P2002") {
-      return res.status(409).json({ error: "Já existe um ingrediente com este nome." });
+      return res.status(409).json({ error: "An ingredient with this name already exists." });
     }
     if (error.code === "P2025") {
-      return res.status(404).json({ error: "Ingrediente não encontrado." });
+      return res.status(404).json({ error: "Ingredient not found." });
     }
     res.status(500).json({ error: "Internal Server Error" });
   }
@@ -102,7 +102,7 @@ router.delete("/:id", authenticateJWT, async (req, res) => {
       return res
         .status(400)
         .json({
-          error: "Não é possível deletar o ingrediente pois ele está sendo usado em algum drink.",
+          error: "Cannot delete ingredient because it is being used in some drink.",
         });
     }
     res.status(500).json({ error: "Internal Server Error" });

@@ -1,34 +1,30 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import { API_BASE } from "../../apiBase";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "../Home/Home.module.css";
 import stylesAuth from "./Login.module.css";
+import Popup from "../Popup/Popup";
+import { useAuth } from "../../hooks/useAuth";
 
-export default function Register({ onRegister }) {
+export default function Register() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [erro, setErro] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const { register } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setErro("");
-    try {
-      const res = await fetch(`${API_BASE}/api/auth/register`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password, name }),
-      });
-      if (!res.ok) {
-        const data = await res.json();
-        setErro(data.error || "Erro ao registrar");
-        return;
-      }
-      const user = await res.json();
-      onRegister(user);
-    } catch {
-      setErro("Erro de conexão");
+    
+    const result = await register(email, password, name);
+    
+    if (result.success) {
+      navigate("/");
+    } else {
+      setErro(result.error);
+      setShowPopup(true);
     }
   };
 
@@ -43,7 +39,6 @@ export default function Register({ onRegister }) {
       <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
         <form className={stylesAuth.loginContainer} onSubmit={handleSubmit}>
           <h2 className={stylesAuth.loginTitle}>Register</h2>
-          {erro && <div className={stylesAuth.error}>{erro}</div>}
           <input
             className={stylesAuth.input}
             type="text"
@@ -89,6 +84,7 @@ export default function Register({ onRegister }) {
             </Link>
           </div>
         </form>
+        <Popup message={erro} show={showPopup && !!erro} onClose={() => setShowPopup(false)} />
       </div>
     </>
   );
