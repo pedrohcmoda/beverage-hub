@@ -6,12 +6,17 @@ import {
   updateIngredient,
   deleteIngredient,
 } from "../models/ingredientModel.js";
+import { authenticateJWT } from "../config/auth.js";
+import { cache } from "../config/cache.js";
 
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+router.get("/", authenticateJWT, async (req, res) => {
   try {
+    const cached = cache.get("ingredients");
+    if (cached) return res.json(cached);
     const ingredients = await getAllIngredients();
+    cache.set("ingredients", ingredients);
     res.json(ingredients);
   } catch (error) {
     console.error("Error fetching ingredients:", error);
@@ -19,10 +24,17 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", authenticateJWT, async (req, res) => {
   try {
-    const ingredient = await getIngredientById(parseInt(req.params.id));
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) {
+      return res.status(400).json({ error: "ID do ingrediente deve ser um número válido." });
+    }
+    const cached = cache.get(`ingredient_${id}`);
+    if (cached) return res.json(cached);
+    const ingredient = await getIngredientById(id);
     if (!ingredient) return res.status(404).json({ error: "Ingredient not found" });
+    cache.set(`ingredient_${id}`, ingredient);
     res.json(ingredient);
   } catch (error) {
     console.error("Error fetching ingredient:", error);
@@ -30,27 +42,57 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", authenticateJWT, async (req, res) => {
   try {
-    const newIngredient = await createIngredient(req.body);
+    const { name } = req.body;
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      return res.status(400).json({ error: "Nome do ingrediente é obrigatório e deve ser um texto válido." });
+    }
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: "Nome do ingrediente deve ter no máximo 100 caracteres." });
+    }
+    const newIngredient = await createIngredient({ name: name.trim() });
+    cache.del("ingredients");  
     res.status(201).json(newIngredient);
   } catch (error) {
     console.error("Error creating ingredient:", error);
+    if (error.code === "P2002") {
+      return res.status(409).json({ error: "Já existe um ingrediente com este nome." });
+    }
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-router.put("/:id", async (req, res) => {
+router.put("/:id", authenticateJWT, async (req, res) => {
   try {
-    const updatedIngredient = await updateIngredient(parseInt(req.params.id), req.body);
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) {
+      return res.status(400).json({ error: "ID do ingrediente deve ser um número válido." });
+    }
+    const { name } = req.body;
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
+      return res.status(400).json({ error: "Nome do ingrediente é obrigatório e deve ser um texto válido." });
+    }
+    if (name.trim().length > 100) {
+      return res.status(400).json({ error: "Nome do ingrediente deve ter no máximo 100 caracteres." });
+    }
+    const updatedIngredient = await updateIngredient(id, { name: name.trim() });
+    cache.del("ingredients");  
+    cache.del(`ingredient_${id}`);
     res.json(updatedIngredient);
   } catch (error) {
     console.error("Error updating ingredient:", error);
+    if (error.code === "P2002") {
+      return res.status(409).json({ error: "Já existe um ingrediente com este nome." });
+    }
+    if (error.code === "P2025") {
+      return res.status(404).json({ error: "Ingrediente não encontrado." });
+    }
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
     await deleteIngredient(parseInt(req.params.id));
     res.status(204).send();

@@ -25,6 +25,7 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
   const [categoryId, setCategoryId] = useState(
     initialData?.category?.id || initialData?.categoryId || ""
   );
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     fetch(`${API_BASE}/api/ingredients`)
@@ -86,9 +87,15 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <h3>{initialData ? "Edit Drink" : "Add Drink"}</h3>
+        {errorMessage && (
+          <div className={styles.errorMessage} style={{ color: 'red', marginBottom: 8 }}>
+            {errorMessage}
+          </div>
+        )}
         <form
           onSubmit={async (e) => {
             e.preventDefault();
+            setErrorMessage("");
             const formData = new FormData();
             formData.append("name", name);
             formData.append("instructions", instructions);
@@ -101,7 +108,14 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
             }
             formData.append("alcoholType", alcoholType);
             formData.append("categoryId", categoryId);
-            await onSave(formData);
+            try {
+              const result = await onSave(formData);
+              if (result && result.error) {
+                setErrorMessage(result.error);
+              }
+            } catch (err) {
+              setErrorMessage(err?.message || "Erro ao salvar. Tente novamente.");
+            }
           }}
           encType="multipart/form-data"
         >

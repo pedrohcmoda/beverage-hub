@@ -1,4 +1,4 @@
-import fs from "fs";
+import { logger as winstonLogger } from "./winstonLogger.js";
 export function logEvent(event) {
-  fs.appendFileSync("server.log", `[${new Date().toISOString()}] ${event}\n`);
+  winstonLogger.info(event);
 }

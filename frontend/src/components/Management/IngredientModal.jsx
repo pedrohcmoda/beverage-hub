@@ -4,6 +4,7 @@ import styles from "./IngredientModal.module.css";
 function IngredientModal({ open, onClose, onSave, initialData }) {
   const [name, setName] = useState(initialData?.name || "");
   const [description, setDescription] = useState(initialData?.description || "");
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setName(initialData?.name || "");
@@ -15,10 +16,23 @@ function IngredientModal({ open, onClose, onSave, initialData }) {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <h3>{initialData ? "Edit Ingredient" : "Add Ingredient"}</h3>
+        {errorMessage && (
+          <div className={styles.errorMessage} style={{ color: 'red', marginBottom: 8 }}>
+            {errorMessage}
+          </div>
+        )}
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            onSave({ name });
+            setErrorMessage("");
+            try {
+              const result = await onSave({ name });
+              if (result && result.error) {
+                setErrorMessage(result.error);
+              }
+            } catch (err) {
+              setErrorMessage(err?.message || "Erro ao salvar. Tente novamente.");
+            }
           }}
         >
           <label>Ingredient Name*</label>

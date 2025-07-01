@@ -7,6 +7,8 @@ import drinkRoutes from "./routes/drinkRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import ingredientRoutes from "./routes/ingredientRoutes.js";
 import compression from "compression";
+import { globalLimiter } from "./config/globalRateLimit.js";
+import { sanitizeBody } from "./config/sanitizer.js";
 
 const app = express();
 app.set("trust proxy", 1);
@@ -34,6 +36,9 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(path.resolve("public/uploads"), { maxAge: "7d" }));
+
+app.use(globalLimiter);
+app.use(sanitizeBody);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/drinks", drinkRoutes);
