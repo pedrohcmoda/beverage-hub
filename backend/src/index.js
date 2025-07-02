@@ -1,4 +1,6 @@
 import express from "express";
+import https from "https";
+import fs from "fs";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import path from "path";
@@ -24,6 +26,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
+      "http://localhost:5174",
+      "https://localhost:5173",
+      "https://localhost:5174",
       "http://138.97.132.151:5173",
       "http://179.154.179.162:5173",
       "https://beverage-pouxca21y-pedrohcmodas-projects.vercel.app",
@@ -48,6 +53,22 @@ app.use("/api/ingredients", ingredientRoutes);
 app.get("/", (req, res) => res.send("API ok"));
 
 const PORT = process.env.PORT || 3000;
+const HTTPS_PORT = process.env.HTTPS_PORT || 3443;
+
+const certPath = path.resolve("selfsigned.crt");
+const keyPath = path.resolve("selfsigned.key");
+
+const httpsOptions = {
+  key: fs.readFileSync(keyPath),
+  cert: fs.readFileSync(certPath)
+};
+
+https.createServer(httpsOptions, app).listen(HTTPS_PORT, "0.0.0.0", () => {
+  console.log(`HTTPS Server running on port ${HTTPS_PORT}`);
+  console.log(`Access: https://localhost:${HTTPS_PORT}`);
+});
+
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`HTTP Server running on port ${PORT}`);
+  console.log(`Access: http://localhost:${PORT}`);
 });

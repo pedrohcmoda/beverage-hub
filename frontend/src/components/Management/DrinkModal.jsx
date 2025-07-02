@@ -28,10 +28,10 @@ function DrinkModal({ open, onClose, onSave, initialData }) {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    fetch(`${API_BASE}/api/ingredients`)
+    fetch(`${API_BASE}/api/ingredients`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setAllIngredients(data));
-    fetch(`${API_BASE}/api/categories`)
+    fetch(`${API_BASE}/api/categories`, { credentials: "include" })
       .then((res) => res.json())
       .then((data) => setAllCategories(data));
   }, [open]);

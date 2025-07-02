@@ -43,7 +43,7 @@ function Home() {
   useEffect(() => {
     async function fetchCategories() {
       try {
-        const response = await fetch(`${API_BASE}/api/categories`);
+        const response = await fetch(`${API_BASE}/api/categories`, {credentials: "include"});
         if (response.ok) {
           const data = await response.json();
           setCategories(Array.isArray(data) ? data : []);
@@ -121,7 +121,7 @@ function Home() {
     try {
       const category = categories.find((cat) => cat.name === categoryName);
       if (!category) return;
-      const response = await fetch(`${API_BASE}/api/categories/${category.id}`);
+      const response = await fetch(`${API_BASE}/api/categories/${category.id}`, {credentials: "include"});
       const data = await response.json();
       setSearchResults(data.drinks || []);
       setMostraResultadoBusca(true);

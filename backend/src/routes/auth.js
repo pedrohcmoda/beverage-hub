@@ -79,7 +79,7 @@ router.post("/login", loginLimiter, sanitizeBody, async (req, res) => {
   res.json({ id: user.id, email: user.email, name: user.name });
 });
 
-router.post("/logout", (req, res) => {
+router.post("/logout", authenticateJWT, (req, res) => {
   const cookieOptions = {
     path: "/"
   };

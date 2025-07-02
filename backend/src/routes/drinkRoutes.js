@@ -27,7 +27,7 @@ router.get("/", authenticateJWT, async (req, res) => {
   }
 });
 
-router.get("/random", async (req, res) => {
+router.get("/random", authenticateJWT, async (req, res) => {
   try {
     const randomDrink = await getRandomDrink();
     res.json(randomDrink);
