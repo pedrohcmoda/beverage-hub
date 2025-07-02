@@ -1,25 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navigate } from "react-router-dom";
-import { API_BASE } from "../apiBase";
+import { useAuth } from "../hooks/useAuth";
 
-function ProtectedRoute({ children }) {
-  const [loading, setLoading] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    fetch(`${API_BASE}/api/auth/me`, { credentials: "include" })
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        setIsAuthenticated(!!data && data.id);
-        setLoading(false);
-      })
-      .catch(() => {
-        setIsAuthenticated(false);
-        setLoading(false);
-      });
-  }, []);
+function ProtectedRoute({ children, publicRoute = false }) {
+  const { loading, isAuthenticated } = useAuth();
 
   if (loading) return null;
+  
+  if (publicRoute) {
+    if (isAuthenticated) return <Navigate to="/" replace />;
+    return children;
+  }
+  
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   return children;
 }

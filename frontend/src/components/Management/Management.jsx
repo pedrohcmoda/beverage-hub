@@ -24,11 +24,11 @@ function Management() {
 
   useEffect(() => {
     if (showType === "drinks") {
-      fetch(`${API_BASE}/api/drinks`)
+      fetch(`${API_BASE}/api/drinks`, {credentials: "include"})
         .then((res) => res.json())
         .then((data) => setDrinks(data));
     } else if (showType === "ingredients") {
-      fetch(`${API_BASE}/api/ingredients`)
+      fetch(`${API_BASE}/api/ingredients`, {credentials: "include"})
         .then((res) => res.json())
         .then((data) => setIngredients(data));
     }
@@ -56,10 +56,10 @@ function Management() {
       options.headers = { "Content-Type": "application/json" };
       options.body = JSON.stringify(data);
     }
-    await fetch(url, options);
+    await fetch(url, options, {credentials: "include"});
     setShowDrinkModal(false);
     setShowType("drinks");
-    fetch(`${API_BASE}/api/drinks`)
+    fetch(`${API_BASE}/api/drinks`, {credentials: "include"})
       .then((res) => res.json())
       .then((data) => setDrinks(data));
   };
@@ -77,19 +77,21 @@ function Management() {
     if (editIngredient) {
       await fetch(`${API_BASE}/api/ingredients/${editIngredient.id}`, {
         method: "PUT",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
     } else {
       await fetch(`${API_BASE}/api/ingredients`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
     }
     setShowIngredientModal(false);
     setShowType("ingredients");
-    fetch(`${API_BASE}/api/ingredients`)
+    fetch(`${API_BASE}/api/ingredients`, {credentials: "include"})
       .then((res) => res.json())
       .then((data) => setIngredients(data));
   };

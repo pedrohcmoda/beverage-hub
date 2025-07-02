@@ -8,7 +8,7 @@ function Drink() {
   useEffect(() => {
     async function fetchDrink() {
       try {
-        const response = await fetch(`${API_BASE}/api/drinks/random`);
+        const response = await fetch(`${API_BASE}/api/drinks/random`, {credentials: "include"});
         const data = await response.json();
         setDrink(data);
       } catch (error) {

@@ -26,6 +26,8 @@
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
+    "node-cache": "^5.1.2",
+    "winston": "^3.17.0",
     "xss": "^1.0.15"
   },
   "devDependencies": {

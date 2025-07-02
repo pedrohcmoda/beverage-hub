@@ -12,7 +12,7 @@ const DrinkModal = ({ onClose }) => {
     const fetchDrinkDetails = async () => {
       if (selectedDrink?.id) {
         try {
-          const response = await fetch(`${API_BASE}/api/drinks/${selectedDrink.id}`);
+          const response = await fetch(`${API_BASE}/api/drinks/${selectedDrink.id}`, {credentials: "include"});
           const data = await response.json();
           setDrinkDetails(data);
         } catch (error) {
